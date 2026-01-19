@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Sparkles, Home, Calendar } from 'lucide-react';
 import { 
   headerStyles, 
   headerContainerStyles, 
@@ -13,7 +14,8 @@ export default function Header() {
     <header style={headerStyles}>
       <div style={headerContainerStyles}>
         <h1 style={headerTitleStyles}>
-          Kids App
+          <Sparkles size={24} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
+          Kids Calendar
         </h1>
         
         <nav>
@@ -23,6 +25,7 @@ export default function Header() {
                 href="/" 
                 style={homeLinkStyles}
               >
+                <Home size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
                 Home
               </Link>
             </li>
@@ -31,6 +34,7 @@ export default function Header() {
                 href="/calendar" 
                 style={calendarLinkStyles}
               >
+                <Calendar size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
                 Calendar
               </Link>
             </li>

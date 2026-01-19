@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Import current theme - change this line to switch themes */
-@import "../styles/themes/professional-theme.css";
+@import "../styles/themes/bright-theme.css";
 
 /* =================================================================== */
 /* BASE DESIGN SYSTEM - Non-theme specific variables                  */
