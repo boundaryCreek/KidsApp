@@ -1,0 +1,361 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum LocationType {
+  VENUE
+  ORGANIZATION
+  FACILITY
+  OUTDOOR
+  ONLINE
+}
+
+enum AccessibilityFeature {
+  WHEELCHAIR_ACCESSIBLE
+  STROLLER_FRIENDLY
+  SENSORY_FRIENDLY
+  ASL_INTERPRETER_AVAILABLE
+  OTHER
+}
+
+enum ParkingType {
+  FREE
+  PAID
+  STREET
+  NONE
+}
+
+enum UserRole {
+  USER
+  PARENT
+  ORGANIZER
+  ADMIN
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// City model (updated with relation to LocationList)
+model City {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  latitude    Float?
+  longitude   Float?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  locations     Location[]
+  activityLists ActivityList[] @relation("ActivityListCity")
+  locationLists LocationList[] @relation("LocationListCity")
+
+  @@map("cities")
+  @@index([slug])
+  @@index([name])
+  @@index([latitude, longitude])
+}
+
+// ActivityList
+model ActivityList {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  featured    Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  activities  Activity[] @relation("ActivityListActivity")
+  cities      City[]     @relation("ActivityListCity")
+  categories  Category[] @relation("ActivityListCategory")
+  ageGroups   AgeGroup[] @relation("ActivityListAgeGroup")
+
+  @@map("activity_lists")
+  @@index([slug])
+  @@index([featured, sortOrder])
+}
+
+// LocationList model (curated lists of locations/venues)
+model LocationList {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  featured    Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  locations   Location[] @relation("LocationListLocation")
+
+  cities      City[]     @relation("LocationListCity")
+  categories  Category[] @relation("LocationListCategory")
+  ageGroups   AgeGroup[] @relation("LocationListAgeGroup")
+
+  @@map("location_lists")
+  @@index([slug])
+  @@index([featured, sortOrder])
+}
+
+// User model
+model User {
+  id                String       @id @default(cuid())
+  email             String       @unique
+  passwordHash      String?
+  name              String?
+  displayName       String?
+  avatarUrl         String?
+  role              UserRole     @default(USER)
+  preferredAgeGroupIds String[]
+  preferredLocation String?
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  reviews           Review[]
+  favorites         Favorite[]
+
+  @@map("users")
+  @@index([email])
+  @@index([role])
+}
+
+// Favorite
+model Favorite {
+  id          String   @id @default(cuid())
+  userId      String
+  activityId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  notes       String?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, activityId])
+  @@map("favorites")
+  @@index([userId])
+  @@index([activityId])
+  @@index([createdAt])
+}
+
+// Activity
+model Activity {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  organizer   String
+  time        String?
+  costMin     Float?
+  costMax     Float?
+  costDisplay String?
+  isFree      Boolean  @default(false)
+  imageUrl    String?
+  featured    Boolean  @default(false)
+  recurrence  Json?
+  recurrenceFrequency String?
+  recurrenceInterval Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ageGroupId  String
+  ageGroup    AgeGroup @relation("ActivityAgeGroup", fields: [ageGroupId], references: [id])
+
+  locationId  String?
+  location    Location? @relation("ActivityLocation", fields: [locationId], references: [id], onDelete: SetNull)
+
+  events      Event[]
+  categories  Category[] @relation("ActivityCategory")
+  favorites   Favorite[]
+  reviews     Review[]
+  activityLists ActivityList[] @relation("ActivityListActivity")
+
+  favoriteCount Int?   @default(0)
+
+  @@map("activities")
+  @@index([slug])
+  @@index([title])
+  @@index([ageGroupId])
+  @@index([locationId])
+  @@index([isFree, featured])
+}
+
+// Location — UPDATED with relation to LocationList
+model Location {
+  id                String              @id @default(cuid())
+  name              String
+  slug              String              @unique
+  type              LocationType
+  description       String
+  address           String?
+  latitude          Float?
+  longitude         Float?
+  phone             String?
+  email             String?
+  website           String?
+  imageUrl          String?
+  amenities         String[]
+  capacity          Int?
+  accessibility     AccessibilityFeature[]
+  parking           ParkingType?
+  publicTransport   String?
+  operatingHours    Json?
+  socialMedia       Json?
+  rating            Float?
+  reviewCount       Int?                @default(0)
+  averageRating     Float?              @default(0)
+  isActive          Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  cityId            String?
+  city              City?               @relation(fields: [cityId], references: [id], onDelete: SetNull)
+
+  activities        Activity[]           @relation("ActivityLocation")
+  categories        Category[]           @relation("LocationCategory")
+  ageGroups         AgeGroup[]           @relation("LocationAgeGroup")
+  reviews           Review[]
+
+  locationLists     LocationList[]       @relation("LocationListLocation")
+
+  @@map("locations")
+  @@index([slug])
+  @@index([type])
+  @@index([organizationId])
+  @@index([cityId])
+  @@index([latitude, longitude])
+}
+
+// Review
+model Review {
+  id          String       @id @default(cuid())
+  rating      Int
+  title       String?
+  comment     String?
+  helpfulCount Int         @default(0)
+  status      ReviewStatus @default(PENDING)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  locationId  String?
+  location    Location?    @relation(fields: [locationId], references: [id], onDelete: SetNull)
+
+  activityId  String?
+  activity    Activity?    @relation(fields: [activityId], references: [id], onDelete: SetNull)
+
+  eventId     String?
+  event       Event?       @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  @@map("reviews")
+  @@index([userId])
+  @@index([locationId])
+  @@index([activityId])
+  @@index([eventId])
+  @@index([rating])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  activityId  String
+  slug        String   @unique
+  date        DateTime
+  time        String?
+  title       String?
+  description String?
+  cancelled   Boolean  @default(false)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  reviews     Review[]
+
+  @@map("events")
+  @@index([date])
+  @@index([activityId, date])
+  @@index([slug])
+}
+
+model AgeGroup {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  slug    String   @unique
+  minAge  Int?
+  maxAge  Int?
+  description String?
+  sortOrder Int    @default(0)
+  isActive  Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activities    Activity[]     @relation("ActivityAgeGroup")
+  locations     Location[]     @relation("LocationAgeGroup")
+  activityLists ActivityList[] @relation("ActivityListAgeGroup")
+  locationLists LocationList[] @relation("LocationListAgeGroup")
+
+  @@map("age_groups")
+  @@index([minAge, maxAge])
+  @@index([slug])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String
+  color       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  locations     Location[]     @relation("LocationCategory")
+  activities    Activity[]     @relation("ActivityCategory")
+  activityLists ActivityList[] @relation("ActivityListCategory")
+  locationLists LocationList[] @relation("LocationListCategory")
+
+  @@map("categories")
+  @@index([slug])
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  website     String?
+  phone       String?
+  email       String?
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  locations   Location[]
+
+  @@map("organizations")
+  @@index([slug])
+}

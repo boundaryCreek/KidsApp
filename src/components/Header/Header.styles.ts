@@ -26,7 +26,7 @@ export const headerTitleStyles: CSSProperties = {
 
 export const navStyles: CSSProperties = {
   display: 'flex',
-  gap: 'var(--space-6)',
+  gap: 'var(--space-4)',
   listStyle: 'none',
   margin: 0,
   padding: 0
@@ -40,10 +40,21 @@ export const baseLinkStyles: CSSProperties = {
   fontFamily: 'var(--font-sans)',
   padding: 'var(--space-2) var(--space-4)',
   borderRadius: 'var(--radius-base)',
-  display: 'inline-block'
+  display: 'inline-block',
+  transition: 'var(--transition-colors)'
 };
 
 export const homeLinkStyles: CSSProperties = {
+  ...baseLinkStyles,
+  backgroundColor: 'var(--color-primary-500)'
+};
+
+export const categoriesLinkStyles: CSSProperties = {
+  ...baseLinkStyles,
+  backgroundColor: 'var(--color-primary-500)'
+};
+
+export const locationsLinkStyles: CSSProperties = {
   ...baseLinkStyles,
   backgroundColor: 'var(--color-primary-500)'
 };

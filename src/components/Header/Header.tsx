@@ -1,12 +1,14 @@
 import Link from 'next/link';
-import { Sparkles, Home, Calendar } from 'lucide-react';
+import { Sparkles, Home, Calendar, Tag, MapPin } from 'lucide-react';
 import { 
   headerStyles, 
   headerContainerStyles, 
   headerTitleStyles, 
   navStyles, 
   homeLinkStyles, 
-  calendarLinkStyles 
+  calendarLinkStyles,
+  categoriesLinkStyles,
+  locationsLinkStyles
 } from './Header.styles';
 
 export default function Header() {
@@ -27,6 +29,24 @@ export default function Header() {
               >
                 <Home size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
                 Home
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/categories" 
+                style={categoriesLinkStyles}
+              >
+                <Tag size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
+                Categories
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/locations" 
+                style={locationsLinkStyles}
+              >
+                <MapPin size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
+                Locations
               </Link>
             </li>
             <li>
