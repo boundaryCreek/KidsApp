@@ -12,10 +12,19 @@ import {
   featureTitleStyles,
   featureDescriptionStyles
 } from './page.styles';
+import AdPlaceholder from '@/components/AdPlaceholder/AdPlaceholder';
 
 export default function Home() {
+
+   const defaultRightRail = (
+      <>
+        <AdPlaceholder size="medium" label="Sponsored Content" />
+        <AdPlaceholder size="small" label="Local Business" />
+        <AdPlaceholder size="large" label="Family Activities" />
+      </>
+    );
   return (
-    <BaseLayout>
+    <BaseLayout rightRail={defaultRightRail}>
       <div style={homeContainerStyles}>
         <section style={heroSectionStyles}>
           <h1 style={heroTitleStyles}>

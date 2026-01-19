@@ -35,6 +35,78 @@ When writing CSS or styling components in this project, use the comprehensive de
 
 Use utility classes when available: `.text-primary`, `.bg-surface`, `.shadow-lg`, etc.
 
+### Architecture Guidelines
+
+#### Type Definitions
+All TypeScript interfaces and types must be defined in the `src/types/` folder for centralized type management:
+- **Common types** (`Category`, `City`, `Organization`, etc.) go in `src/types/common.ts`
+- **Domain-specific types** in separate files like `src/types/activity.ts`, `src/types/location.ts`
+- **Export all types** from `src/types/index.ts` for easy importing
+- **Never define types inline** in components or pages - always import from the types folder
+- **Include utility functions** with types when applicable (e.g., `formatActivityCost`)
+
+Example import pattern:
+```typescript
+import { Activity, Location, Category } from '../../../types';
+import { formatActivityCost } from '../../../types/activity';
+```
+
+#### Component Structure
+Each React component must follow this folder structure pattern:
+```
+src/components/ComponentName/
+├── ComponentName.tsx          # Main React component
+├── ComponentName.styles.ts    # Styled elements and CSS-in-JS styles
+└── index.ts                   # Optional: re-export for cleaner imports
+```
+
+**Rules:**
+- **Separate concerns**: Component logic in `.tsx`, styles in `.styles.ts`
+- **Use TypeScript**: All components must be fully typed with proper interfaces
+- **CSS-in-JS**: Use the design system variables in styled elements
+- **Client components**: Add `'use client'` directive when using React hooks
+- **Consistent naming**: PascalCase for component names, matching folder names
+
+**Style file pattern:**
+```typescript
+import { CSSProperties } from 'react';
+
+export const componentStyles: CSSProperties = {
+  padding: 'var(--space-4)',
+  backgroundColor: 'var(--color-neutral-50)',
+  borderRadius: 'var(--radius-lg)',
+};
+```
+
+#### CSS Layout Guidelines
+**Prefer CSS Grid** for layout structure over flexbox when appropriate:
+- **Grid for 2D layouts**: Use CSS Grid for complex layouts with both rows and columns
+- **Responsive design**: Utilize `grid-template-columns` with `minmax()` and `fr` units
+- **Layout patterns**: Cards, content areas, sidebar layouts, form grids
+- **Design system spacing**: Use `--space-*` variables for grid gaps
+
+**Grid examples:**
+```typescript
+// Card grid layout
+export const cardGridStyles: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+  gap: 'var(--space-6)',
+};
+
+// Main content with sidebar
+export const contentLayoutStyles: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) 320px',
+  gap: 'var(--space-8)',
+  alignItems: 'start',
+};
+```
+
+**When to use Grid vs Flexbox:**
+- **CSS Grid**: Page layouts, card grids, complex 2D arrangements
+- **Flexbox**: Navigation bars, button groups, single-direction alignment
+
 ### Project Setup Status
 - [x] Verify that the copilot-instructions.md file in the .github directory is created.
 - [x] Clarify Project Requirements - Next.js with TypeScript and Tailwind CSS

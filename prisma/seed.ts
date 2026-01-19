@@ -102,6 +102,100 @@ async function main() {
     })
   }
 
+  // Get all existing activities to create events for them
+  const activities = await prisma.activity.findMany({
+    where: { isActive: true },
+    select: { id: true, slug: true, title: true }
+  })
+
+  console.log(`📅 Creating events for ${activities.length} activities...`)
+
+  // Create events for each activity
+  const eventTypes = [
+    { 
+      titleSuffix: 'Workshop', 
+      description: 'Hands-on interactive workshop session',
+      time: '10:00 AM'
+    },
+    { 
+      titleSuffix: 'Class', 
+      description: 'Regular scheduled class session',
+      time: '2:00 PM'
+    },
+    { 
+      titleSuffix: 'Special Event', 
+      description: 'Special themed event with unique activities',
+      time: '11:00 AM'
+    },
+    { 
+      titleSuffix: 'Open Play', 
+      description: 'Drop-in open play session',
+      time: '9:30 AM'
+    }
+  ]
+
+  // Helper function to generate future dates
+  function getFutureDates(count: number): Date[] {
+    const dates = []
+    const today = new Date()
+    
+    for (let i = 1; i <= count; i++) {
+      const futureDate = new Date(today)
+      futureDate.setDate(today.getDate() + (i * 7)) // Weekly intervals
+      dates.push(futureDate)
+    }
+    
+    return dates
+  }
+
+  // Create 2-4 events per activity
+  for (const activity of activities) {
+    const numEvents = Math.floor(Math.random() * 3) + 2 // 2-4 events
+    const futureDates = getFutureDates(8) // Get 8 future dates to choose from
+    const selectedDates = futureDates
+      .sort(() => 0.5 - Math.random()) // Shuffle
+      .slice(0, numEvents) // Take the first numEvents
+      .sort((a, b) => a.getTime() - b.getTime()) // Sort chronologically
+
+    for (let i = 0; i < selectedDates.length; i++) {
+      const eventType = eventTypes[i % eventTypes.length]
+      const date = selectedDates[i]
+      
+      // Create unique slug for event
+      const eventSlug = `${activity.slug}-${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      
+      // Some events have custom titles, others use activity title
+      const hasCustomTitle = Math.random() > 0.3 // 70% chance of custom title
+      const eventTitle = hasCustomTitle ? `${activity.title} ${eventType.titleSuffix}` : null
+      
+      // Some events have additional notes
+      const hasNotes = Math.random() > 0.6 // 40% chance of notes
+      const notes = hasNotes ? [
+        'Please arrive 15 minutes early for check-in',
+        'Bring a water bottle and comfortable shoes',
+        'Materials provided - just bring your enthusiasm!',
+        'Limited spots available - register early',
+        'Perfect for beginners and experienced participants'
+      ][Math.floor(Math.random() * 5)] : null
+
+      await prisma.event.upsert({
+        where: { slug: eventSlug },
+        update: {},
+        create: {
+          activityId: activity.id,
+          slug: eventSlug,
+          date: date,
+          time: eventType.time,
+          title: eventTitle,
+          description: eventType.description,
+          cancelled: false,
+          notes: notes
+        }
+      })
+    }
+  }
+
+  console.log(`✅ Created events for all activities!`)
   console.log('✅ Database seeded successfully!')
 }
 

@@ -1,17 +1,18 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import BaseLayout from '../../../components/BaseLayout/BaseLayout';
 import ActivityCard from '../../../components/ActivityCard/ActivityCard';
+import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
+import SectionHeader from '../../../components/SectionHeader/SectionHeader';
+import CategoryList from '../../../components/CategoryList/CategoryList';
+import ContactInfo from '../../../components/ContactInfo/ContactInfo';
+import { prisma } from '../../../lib/prisma';
+import { Location, LocationType } from '../../../types';
 import {
   MapPin, Phone, Mail, Globe, Star, Activity, Users, Building2, 
   Trees, Warehouse, ChevronRight, Calendar, DollarSign
 } from 'lucide-react';
 import * as styles from './page.styles';
-
-type LocationType = 'VENUE' | 'ORGANIZATION' | 'FACILITY' | 'OUTDOOR' | 'ONLINE';
 
 interface Category {
   id: string;
@@ -57,33 +58,7 @@ interface Activity {
   };
 }
 
-interface Location {
-  id: string;
-  name: string;
-  slug: string;
-  type: LocationType;
-  description: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  amenities: string[];
-  capacity?: number;
-  accessibility: string[];
-  parking?: string;
-  publicTransport?: string;
-  operatingHours?: Record<string, string>;
-  rating?: number;
-  reviewCount?: number;
-  city?: City;
-  organization?: Organization;
-  categories: Category[];
-  activities: Activity[];
-  _count: {
-    activities: number;
-    reviews: number;
-  };
-}
+
 
 const getLocationTypeIcon = (type: LocationType) => {
   switch (type) {
@@ -116,70 +91,46 @@ const formatCost = (activity: Activity) => {
   return 'Contact for pricing';
 };
 
-export default function LocationPage({ params }: { params: Promise<{ slug: string }> }) {
-  const [location, setLocation] = useState<Location | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const resolvedParams = await params;
-        const response = await fetch(`/api/locations/${resolvedParams.slug}`);
-        if (response.status === 404) {
-          notFound();
-          return;
-        }
-        if (!response.ok) {
-          throw new Error('Failed to fetch location');
-        }
-        const data = await response.json();
-        setLocation(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load location');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchLocation();
-  }, [params]);
-
-  if (isLoading) {
-    return (
-      <BaseLayout>
-        <div style={styles.pageContainer}>
-          <div style={styles.container}>
-            <div style={styles.loadingSpinner}>
-              Loading location...
-            </div>
-          </div>
-        </div>
-      </BaseLayout>
-    );
-  }
-
-  if (error) {
-    return (
-      <BaseLayout>
-        <div style={styles.pageContainer}>
-          <div style={styles.container}>
-            <div style={styles.errorMessage}>
-              <h2>Oops! Something went wrong</h2>
-              <p>{error}</p>
-              <Link href="/locations" style={styles.breadcrumbLink}>
-                ← Back to Locations
-              </Link>
-            </div>
-          </div>
-        </div>
-      </BaseLayout>
-    );
-  }
+export default async function LocationPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  
+  const location = await prisma.location.findFirst({
+    where: {
+      slug: slug,
+      isActive: true,
+    },
+    include: {
+      city: true,
+      organization: true,
+      categories: true,
+      activities: {
+        where: {
+          isActive: true,
+        },
+        include: {
+          ageGroup: true,
+          categories: true,
+          _count: {
+            select: {
+              favorites: true,
+              reviews: true,
+            },
+          },
+        },
+        orderBy: {
+          title: 'asc',
+        },
+      },
+      _count: {
+        select: {
+          activities: true,
+        },
+      },
+    },
+  });
 
   if (!location) {
     notFound();
-    return null;
   }
 
   const LocationIcon = getLocationTypeIcon(location.type);
@@ -189,13 +140,13 @@ export default function LocationPage({ params }: { params: Promise<{ slug: strin
       <div style={styles.pageContainer}>
         <div style={styles.container}>
           {/* Breadcrumb */}
-          <nav style={styles.breadcrumb}>
-            <Link href="/" style={styles.breadcrumbLink}>Home</Link>
-            <ChevronRight size={16} />
-            <Link href="/locations" style={styles.breadcrumbLink}>Locations</Link>
-            <ChevronRight size={16} />
-            <span>{location.name}</span>
-          </nav>
+          <Breadcrumb
+            items={[
+              { href: '/', label: 'Home' },
+              { href: '/locations', label: 'Locations' },
+            ]}
+            currentPage={location.name}
+          />
 
           {/* Location Header */}
           <header style={styles.locationHeader}>
@@ -221,25 +172,18 @@ export default function LocationPage({ params }: { params: Promise<{ slug: strin
               <p style={styles.locationDescription}>{location.description}</p>
             )}
 
-            {location.categories.length > 0 && (
-              <div style={styles.categoriesList}>
-                {location.categories.map((category) => (
-                  <span key={category.id} style={styles.categoryTag}>
-                    {category.name}
-                  </span>
-                ))}
-              </div>
-            )}
+            <CategoryList categories={location.categories} />
           </header>
 
           {/* Details Grid */}
           <div style={styles.detailsGrid}>
             {/* Activities Section */}
             <section style={styles.detailsSection}>
-              <h2 style={styles.sectionTitle}>
-                <Activity size={20} />
-                Activities ({location._count.activities})
-              </h2>
+              <SectionHeader 
+                icon={<Activity size={20} />} 
+                title="Activities" 
+                count={location._count.activities} 
+              />
               
               {location.activities.length > 0 ? (
                 <div style={styles.activitiesGrid}>

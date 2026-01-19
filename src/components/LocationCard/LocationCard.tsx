@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, Users, Star, Activity, Building2, Trees, Warehouse, Globe } from 'lucide-react';

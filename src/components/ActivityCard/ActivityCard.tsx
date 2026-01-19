@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, Users, Heart, MessageSquare, Star, DollarSign, Calendar, Building2 } from 'lucide-react';

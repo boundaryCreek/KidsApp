@@ -229,3 +229,89 @@ export const errorMessage: CSSProperties = {
   flexDirection: 'column',
   gap: 'var(--space-4)',
 };
+
+// Events styles
+export const eventsContainer: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 'var(--space-4)',
+};
+
+export const eventCard: CSSProperties = {
+  display: 'flex',
+  backgroundColor: 'var(--color-surface)',
+  borderRadius: 'var(--radius-lg)',
+  border: '1px solid var(--color-neutral-200)',
+  padding: 'var(--space-4)',
+  boxShadow: 'var(--shadow-sm)',
+  transition: 'var(--transition-colors)',
+};
+
+export const eventDate: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'var(--color-primary-600)',
+  color: 'var(--color-neutral-50)',
+  borderRadius: 'var(--radius-md)',
+  padding: 'var(--space-3)',
+  minWidth: '60px',
+  marginRight: 'var(--space-4)',
+};
+
+export const eventDay: CSSProperties = {
+  fontSize: 'var(--font-size-xl)',
+  fontWeight: 'var(--font-weight-bold)',
+  lineHeight: '1',
+};
+
+export const eventMonth: CSSProperties = {
+  fontSize: 'var(--font-size-xs)',
+  fontWeight: 'var(--font-weight-medium)',
+  textTransform: 'uppercase',
+  letterSpacing: 'var(--letter-spacing-wide)',
+};
+
+export const eventDetails: CSSProperties = {
+  flex: 1,
+};
+
+export const eventTitle: CSSProperties = {
+  fontSize: 'var(--font-size-lg)',
+  fontWeight: 'var(--font-weight-semibold)',
+  color: 'var(--color-neutral-900)',
+  marginBottom: 'var(--space-2)',
+};
+
+export const eventMeta: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 'var(--space-4)',
+  marginBottom: 'var(--space-3)',
+};
+
+export const eventTime: CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 'var(--space-1)',
+  fontSize: 'var(--font-size-sm)',
+  color: 'var(--color-neutral-600)',
+};
+
+export const eventDescription: CSSProperties = {
+  fontSize: 'var(--font-size-sm)',
+  color: 'var(--color-neutral-700)',
+  lineHeight: 'var(--line-height-relaxed)',
+  marginBottom: 'var(--space-2)',
+};
+
+export const eventNotes: CSSProperties = {
+  fontSize: 'var(--font-size-xs)',
+  color: 'var(--color-neutral-500)',
+  fontStyle: 'italic',
+  backgroundColor: 'var(--color-neutral-50)',
+  padding: 'var(--space-2)',
+  borderRadius: 'var(--radius-sm)',
+  border: '1px solid var(--color-neutral-200)',
+};
