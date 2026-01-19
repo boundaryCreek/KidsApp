@@ -157,10 +157,10 @@ export default function LocationsPage() {
       <div style={styles.pageContainer}>
         <div style={styles.container}>
         <header style={styles.headerSection}>
-          <h1 style={styles.title}>Discover Amazing Locations</h1>
+          <h1 style={styles.title}>Discover Minnesota's Amazing Locations</h1>
           <p style={styles.subtitle}>
-            Explore venues, organizations, and facilities where kids can learn, play, and grow. 
-            From museums and theaters to parks and sports centers, find the perfect place for your next adventure.
+            Explore venues across the Twin Cities, Duluth, and throughout Minnesota where kids can learn, play, and grow. 
+            From children's museums and theaters to state parks and community centers.
           </p>
         </header>
 

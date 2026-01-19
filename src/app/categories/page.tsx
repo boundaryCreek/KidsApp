@@ -106,10 +106,10 @@ export default function CategoriesPage() {
             <Tag size={64} color="var(--color-primary-600)" />
           </div>
           <h1 style={categoriesTitleStyles}>
-            Activity Categories
+            Minnesota Activity Categories
           </h1>
           <p style={categoriesDescriptionStyles}>
-            Explore different types of activities and experiences for kids.
+            Discover amazing kids activities across Minnesota, organized by type and interest.
           </p>
         </div>
         

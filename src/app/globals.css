@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* Import current theme - change this line to switch themes */
-@import "../styles/themes/bright-theme.css";
+/* Import current theme - Up North theme for Minnesota kids activities */
+@import "../styles/themes/up-north-theme.css";
 
 /* =================================================================== */
 /* BASE DESIGN SYSTEM - Non-theme specific variables                  */

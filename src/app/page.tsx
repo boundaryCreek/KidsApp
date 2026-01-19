@@ -29,14 +29,14 @@ export default function Home() {
         <section style={heroSectionStyles}>
           <h1 style={heroTitleStyles}>
             <Sparkles size={48} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-3)' }} />
-            Discover joyful, local experiences that keep your little ones moving, learning, and smiling.
+            Discover Minnesota's Best Kids Activities
           </h1>
           <p style={heroSubtitleStyles}>
-            Browse curated activities by age, location, and cost—then jump into the calendar view for planning. Every listing includes venue information and helpful details.
+            From the Twin Cities to Duluth, find amazing experiences for your little ones throughout the Land of 10,000 Lakes. Discover local adventures by age, location, and season.
           </p>
           <button style={ctaButtonStyles}>
             <Calendar size={20} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
-            Open the Calendar
+            Explore Activities
           </button>
         </section>
 
@@ -45,9 +45,9 @@ export default function Home() {
             <div style={featureEmojiStyles}>
               <Target size={64} color="var(--color-primary-600)" />
             </div>
-            <h3 style={featureTitleStyles}>Sports</h3>
+            <h3 style={featureTitleStyles}>Sports & Recreation</h3>
             <p style={featureDescriptionStyles}>
-              Soccer, basketball, swimming, and more activities to keep kids active and healthy.
+              Hockey, skiing, soccer, and swimming across Minnesota's best facilities and outdoor spaces.
             </p>
           </div>
 
@@ -55,9 +55,9 @@ export default function Home() {
             <div style={featureEmojiStyles}>
               <Palette size={64} color="var(--color-secondary-600)" />
             </div>
-            <h3 style={featureTitleStyles}>Arts & Crafts</h3>
+            <h3 style={featureTitleStyles}>Arts & Culture</h3>
             <p style={featureDescriptionStyles}>
-              Creative workshops, painting classes, and hands-on projects for artistic expression.
+              Creative workshops at local museums, art centers, and community venues throughout Minnesota.
             </p>
           </div>
 
@@ -65,9 +65,9 @@ export default function Home() {
             <div style={featureEmojiStyles}>
               <Microscope size={64} color="var(--color-accent-600)" />
             </div>
-            <h3 style={featureTitleStyles}>STEM</h3>
+            <h3 style={featureTitleStyles}>STEM & Discovery</h3>
             <p style={featureDescriptionStyles}>
-              Science experiments, coding workshops, and engineering challenges for curious minds.
+              Science museums, nature centers, and tech workshops from the Twin Cities to Duluth.
             </p>
           </div>
 
@@ -75,9 +75,9 @@ export default function Home() {
             <div style={featureEmojiStyles}>
               <Music size={64} color="var(--color-primary-600)" />
             </div>
-            <h3 style={featureTitleStyles}>Music</h3>
+            <h3 style={featureTitleStyles}>Music & Performance</h3>
             <p style={featureDescriptionStyles}>
-              Piano lessons, choir practice, and music appreciation classes for all skill levels.
+              Theater, music lessons, and performance opportunities at Minnesota's cultural venues.
             </p>
           </div>
 
@@ -85,9 +85,9 @@ export default function Home() {
             <div style={featureEmojiStyles}>
               <BookOpen size={64} color="var(--color-secondary-600)" />
             </div>
-            <h3 style={featureTitleStyles}>Reading</h3>
+            <h3 style={featureTitleStyles}>Learning & Education</h3>
             <p style={featureDescriptionStyles}>
-              Story time, book clubs, and reading adventures to foster a love of literature.
+              Libraries, educational programs, and learning centers across the Land of 10,000 Lakes.
             </p>
           </div>
 
@@ -95,9 +95,9 @@ export default function Home() {
             <div style={featureEmojiStyles}>
               <Trees size={64} color="var(--color-accent-600)" />
             </div>
-            <h3 style={featureTitleStyles}>Outdoor</h3>
+            <h3 style={featureTitleStyles}>Outdoor Adventures</h3>
             <p style={featureDescriptionStyles}>
-              Nature walks, playground time, and outdoor adventures in fresh air.
+              State parks, nature programs, and outdoor activities celebrating Minnesota's natural beauty.
             </p>
           </div>
         </section>

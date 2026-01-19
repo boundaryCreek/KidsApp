@@ -1,0 +1,201 @@
+/* =================================================================== */
+/* UP NORTH THEME - Minnesota-Inspired Colors & Typography            */
+/* =================================================================== */
+
+:root {
+  /* ====================== THEME COLORS ====================== */
+  /* Primary Colors - Deep Forest Green (Minnesota pine trees) */
+  --color-primary-50: #f0f9f4;
+  --color-primary-100: #dcf2e3;
+  --color-primary-200: #bce5cc;
+  --color-primary-300: #8dd0a8;
+  --color-primary-400: #56b37d;
+  --color-primary-500: #2f925a;
+  --color-primary-600: #1f7a47;
+  --color-primary-700: #196139;
+  --color-primary-800: #164e30;
+  --color-primary-900: #124028;
+
+  /* Secondary Colors - Lake Blue (Minnesota waters) */
+  --color-secondary-50: #f0f8ff;
+  --color-secondary-100: #e0f0fe;
+  --color-secondary-200: #bae1fd;
+  --color-secondary-300: #7cc8fb;
+  --color-secondary-400: #36adf7;
+  --color-secondary-500: #0c92e8;
+  --color-secondary-600: #0074c7;
+  --color-secondary-700: #015ca1;
+  --color-secondary-800: #064f85;
+  --color-secondary-900: #0b426e;
+
+  /* Accent Colors - Autumn Orange (Minnesota fall colors) */
+  --color-accent-50: #fff8ed;
+  --color-accent-100: #ffefd4;
+  --color-accent-200: #ffdba8;
+  --color-accent-300: #ffc071;
+  --color-accent-400: #ff9b38;
+  --color-accent-500: #ff7b11;
+  --color-accent-600: #f05f07;
+  --color-accent-700: #c74708;
+  --color-accent-800: #9e390f;
+  --color-accent-900: #7f3010;
+
+  /* Neutral Colors - Snow and Stone */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f4f4f5;
+  --color-neutral-200: #e4e4e7;
+  --color-neutral-300: #d4d4d8;
+  --color-neutral-400: #a1a1aa;
+  --color-neutral-500: #71717a;
+  --color-neutral-600: #52525b;
+  --color-neutral-700: #3f3f46;
+  --color-neutral-800: #27272a;
+  --color-neutral-900: #18181b;
+
+  /* Success Colors - Pine Green */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
+
+  /* Warning Colors - Sunset Gold */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* Error Colors - Cranberry Red */
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  /* Info Colors - Sky Blue */
+  --color-info-50: #f0f9ff;
+  --color-info-100: #e0f2fe;
+  --color-info-200: #bae6fd;
+  --color-info-300: #7dd3fc;
+  --color-info-400: #38bdf8;
+  --color-info-500: #0ea5e9;
+  --color-info-600: #0284c7;
+  --color-info-700: #0369a1;
+  --color-info-800: #075985;
+  --color-info-900: #0c4a6e;
+
+  /* ====================== THEME VARIABLES ====================== */
+  --color-background: var(--color-neutral-50);
+  --color-surface: #ffffff;
+  --color-surface-secondary: var(--color-neutral-100);
+  --color-border: var(--color-neutral-200);
+  --color-text: var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-600);
+
+  /* ====================== TYPOGRAPHY ====================== */
+  /* Minnesota-friendly fonts */
+  --font-display: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-accent: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* ====================== GRADIENTS ====================== */
+  /* Up North inspired gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-secondary-500) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--color-secondary-500) 0%, var(--color-accent-400) 100%);
+  --gradient-hero: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-secondary-50) 50%, var(--color-accent-50) 100%);
+
+  /* ====================== UTILITY CLASSES ====================== */
+  --bg-primary: var(--color-primary-600);
+  --bg-secondary: var(--color-secondary-600);
+  --bg-accent: var(--color-accent-600);
+  --bg-surface: var(--color-surface);
+  --bg-muted: var(--color-neutral-50);
+
+  --text-primary: var(--color-primary-700);
+  --text-secondary: var(--color-secondary-700);
+  --text-accent: var(--color-accent-700);
+  --text-muted: var(--color-neutral-600);
+
+  --border-primary: var(--color-primary-200);
+  --border-secondary: var(--color-secondary-200);
+  --border-muted: var(--color-neutral-200);
+}
+
+/* ====================== COMPONENT OVERRIDES ====================== */
+/* Header with Minnesota styling */
+.up-north-header {
+  background: var(--gradient-primary);
+  border-bottom: 3px solid var(--color-accent-500);
+}
+
+/* Cards with northern charm */
+.up-north-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary-100);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 6px -1px rgba(31, 122, 71, 0.1), 0 2px 4px -1px rgba(31, 122, 71, 0.06);
+  transition: all var(--transition-base);
+}
+
+.up-north-card:hover {
+  border-color: var(--color-primary-300);
+  box-shadow: 0 10px 15px -3px rgba(31, 122, 71, 0.1), 0 4px 6px -2px rgba(31, 122, 71, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Buttons with Minnesota flair */
+.up-north-button-primary {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-base);
+}
+
+.up-north-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px -5px rgba(31, 122, 71, 0.25);
+}
+
+/* Activity tags with seasonal colors */
+.up-north-tag-spring {
+  background: var(--color-success-100);
+  color: var(--color-success-800);
+  border: 1px solid var(--color-success-200);
+}
+
+.up-north-tag-summer {
+  background: var(--color-secondary-100);
+  color: var(--color-secondary-800);
+  border: 1px solid var(--color-secondary-200);
+}
+
+.up-north-tag-fall {
+  background: var(--color-accent-100);
+  color: var(--color-accent-800);
+  border: 1px solid var(--color-accent-200);
+}
+
+.up-north-tag-winter {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-800);
+  border: 1px solid var(--color-neutral-200);
+}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, Home, Calendar, Tag, MapPin } from 'lucide-react';
+import { TreePine, Home, Calendar, Tag, MapPin } from 'lucide-react';
 import { 
   headerStyles, 
   headerContainerStyles, 
@@ -16,8 +16,8 @@ export default function Header() {
     <header style={headerStyles}>
       <div style={headerContainerStyles}>
         <h1 style={headerTitleStyles}>
-          <Sparkles size={24} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
-          Kids Calendar
+          <TreePine size={24} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
+          UpNorth Kids
         </h1>
         
         <nav>
