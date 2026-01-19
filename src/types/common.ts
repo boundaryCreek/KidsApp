@@ -10,26 +10,39 @@ export interface City {
   id: string;
   name: string;
   slug: string;
-  description?: string;
-  latitude?: number;
-  longitude?: number;
+  description: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Organization {
   id: string;
   name: string;
   slug: string;
-  description?: string;
-  website?: string;
-  email?: string;
-  phone?: string;
+  description: string | null;
+  website: string | null;
+  email: string | null;
+  phone: string | null;
+  imageUrl: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface AgeGroup {
   id: string;
   name: string;
-  minAge: number;
-  maxAge: number;
+  slug: string;
+  minAge: number | null;
+  maxAge: number | null;
+  description: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface User {
@@ -40,11 +53,18 @@ export interface User {
 
 export interface Review {
   id: string;
-  content: string;
   rating: number;
+  title: string | null;
+  comment: string | null;
+  helpfulCount: number;
   isActive: boolean;
   createdAt: Date;
+  updatedAt: Date;
+  userId: string;
   user: Pick<User, 'name' | 'email'>;
+  locationId: string | null;
+  activityId: string | null;
+  eventId: string | null;
 }
 
 export interface Event {
@@ -52,11 +72,11 @@ export interface Event {
   activityId: string;
   slug: string;
   date: Date;
-  time?: string;
-  title?: string;
-  description?: string;
+  time: string | null;
+  title: string | null;
+  description: string | null;
   cancelled: boolean;
-  notes?: string;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

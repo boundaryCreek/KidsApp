@@ -3,22 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { MapPin, Users, Heart, MessageSquare, Star, DollarSign, Calendar, Building2 } from 'lucide-react';
+import { Category, AgeGroup } from '../../types';
 import * as styles from './ActivityCard.styles';
-
-interface Category {
-  id: string;
-  name: string;
-  slug?: string;
-  icon?: string;
-  color?: string;
-}
-
-interface AgeGroup {
-  id?: string;
-  name: string;
-  minAge?: number;
-  maxAge?: number;
-}
 
 interface Location {
   id?: string;
@@ -38,12 +24,12 @@ interface ActivityCardProps {
   slug: string;
   description: string;
   organizer?: string;
-  costMin?: number | null;
-  costMax?: number | null;
-  costDisplay?: string | null;
+  costMin: number | null;
+  costMax: number | null;
+  costDisplay: string | null;
   isFree: boolean;
   featured?: boolean;
-  imageUrl?: string | null;
+  imageUrl: string | null;
   location?: Location | null;
   ageGroup?: AgeGroup | null;
   categories?: Category[];
@@ -60,7 +46,12 @@ interface ActivityCardProps {
   className?: string;
 }
 
-const formatCost = (activity: Omit<ActivityCardProps, 'id' | 'title' | 'slug' | 'description'>) => {
+const formatCost = (activity: {
+  costMin: number | null;
+  costMax: number | null;
+  costDisplay: string | null;
+  isFree: boolean;
+}) => {
   if (activity.isFree) return 'Free';
   if (activity.costDisplay) return activity.costDisplay;
   if (activity.costMin && activity.costMax) {

@@ -1,6 +1,7 @@
 import { Category, City, Organization } from './common';
 
 export type LocationType = 'VENUE' | 'ORGANIZATION' | 'FACILITY' | 'OUTDOOR' | 'ONLINE';
+export type ParkingType = 'FREE' | 'PAID' | 'STREET' | 'NONE';
 
 export interface Location {
   id: string;
@@ -8,31 +9,30 @@ export interface Location {
   slug: string;
   type: LocationType;
   description: string;
-  address?: string;
-  latitude?: number;
-  longitude?: number;
-  phone?: string;
-  email?: string;
-  website?: string;
-  imageUrl?: string;
-  amenities?: string[];
-  capacity?: number;
-  parking?: string;
-  publicTransport?: string;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  imageUrl: string | null;
+  amenities: string[];
+  capacity: number | null;
+  parking: ParkingType | null;
+  publicTransport: string | null;
   operatingHours?: any;
-  hours?: any;
-  timezone?: string;
   socialMedia?: any;
-  rating?: number;
-  reviewCount?: number;
-  averageRating?: number;
+  rating: number | null;
+  reviewCount: number | null;
+  averageRating: number | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  city?: City;
-  organization?: Organization;
+  city: City | null;
+  organization: Organization;
   categories: Category[];
   _count?: {
     activities: number;
+    reviews?: number;
   };
 }

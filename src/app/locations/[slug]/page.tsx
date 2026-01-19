@@ -198,6 +198,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                       costMax={activity.costMax}
                       costDisplay={activity.costDisplay}
                       isFree={activity.isFree}
+                      imageUrl={activity.imageUrl}
                       ageGroup={activity.ageGroup}
                       categories={activity.categories}
                       _count={activity._count}

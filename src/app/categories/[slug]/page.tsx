@@ -130,8 +130,11 @@ export default async function CategoryDetailsPage({ params }: { params: Promise<
                   slug={activity.slug}
                   description={activity.description}
                   organizer={activity.organizer}
+                  costMin={activity.costMin}
+                  costMax={activity.costMax}
                   costDisplay={activity.costDisplay}
                   isFree={activity.isFree}
+                  imageUrl={activity.imageUrl}
                   location={activity.location}
                   ageGroup={activity.ageGroup}
                   _count={activity._count}

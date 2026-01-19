@@ -19,9 +19,6 @@ export const breadcrumbLinkStyles: CSSProperties = {
   color: 'var(--color-primary-600)',
   textDecoration: 'none',
   transition: 'var(--transition-colors)',
-  ':hover': {
-    color: 'var(--color-primary-700)',
-  },
 };
 
 export const currentPageStyles: CSSProperties = {

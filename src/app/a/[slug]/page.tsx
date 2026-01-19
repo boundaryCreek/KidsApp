@@ -126,44 +126,46 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
 
           {/* Details Grid */}
           <div style={styles.detailsGrid}>
-            {/* Location Section */}
-            <section style={styles.detailsSection}>
-              <SectionHeader icon={<MapPin size={20} />} title="Location Details" />
-              
-              <div>
-                <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', marginBottom: 'var(--space-3)' }}>
-                  {activity.location.name}
-                </h3>
+            {/* Location Section - only show if location exists */}
+            {activity.location && (
+              <section style={styles.detailsSection}>
+                <SectionHeader icon={<MapPin size={20} />} title="Location Details" />
+                
+                <div>
+                  <h3 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', marginBottom: 'var(--space-3)' }}>
+                    {activity.location.name}
+                  </h3>
 
-                <ContactInfo
-                  address={activity.location.address}
-                  phone={activity.location.phone}
-                  email={activity.location.email}
-                  website={activity.location.website}
-                  city={activity.location.city}
-                  organization={activity.location.organization}
-                />
-              </div>
+                  <ContactInfo
+                    address={activity.location.address}
+                    phone={activity.location.phone}
+                    email={activity.location.email}
+                    website={activity.location.website}
+                    city={activity.location.city}
+                    organization={activity.location.organization}
+                  />
+                </div>
 
-              <Link 
-                href={`/locations/${activity.location.slug}`}
-                style={{
-                  display: 'block',
-                  marginTop: 'var(--space-6)',
-                  padding: 'var(--space-3)',
-                  backgroundColor: 'var(--color-primary-600)',
-                  color: 'var(--color-neutral-50)',
-                  textDecoration: 'none',
-                  borderRadius: 'var(--radius-lg)',
-                  textAlign: 'center',
-                  fontWeight: 'var(--font-weight-medium)',
-                  fontSize: 'var(--font-size-sm)',
-                  transition: 'background-color 0.2s ease',
-                }}
-              >
-                View All Activities at {activity.location.name}
-              </Link>
-            </section>
+                <Link 
+                  href={`/locations/${activity.location.slug}`}
+                  style={{
+                    display: 'block',
+                    marginTop: 'var(--space-6)',
+                    padding: 'var(--space-3)',
+                    backgroundColor: 'var(--color-primary-600)',
+                    color: 'var(--color-neutral-50)',
+                    textDecoration: 'none',
+                    borderRadius: 'var(--radius-lg)',
+                    textAlign: 'center',
+                    fontWeight: 'var(--font-weight-medium)',
+                    fontSize: 'var(--font-size-sm)',
+                    transition: 'background-color 0.2s ease',
+                  }}
+                >
+                  View All Activities at {activity.location.name}
+                </Link>
+              </section>
+            )}
 
             {/* Stats & Actions Section */}
             <section style={styles.detailsSection}>

@@ -2,12 +2,12 @@ import { MapPin, Phone, Mail, Globe, Building2, Users } from 'lucide-react';
 import { City, Organization } from '../../types';
 
 interface ContactInfoProps {
-  address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  city?: City;
-  organization?: Organization;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  city: City | null;
+  organization: Organization;
 }
 
 const contactInfoStyles = {
