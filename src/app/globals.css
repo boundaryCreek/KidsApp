@@ -155,7 +155,8 @@
   --breakpoint-2xl: 1536px;
 }
 
-@theme inline {
+/* Theme variations can be defined here */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

@@ -24,8 +24,6 @@ export interface Organization {
   slug: string;
   description: string | null;
   website: string | null;
-  email: string | null;
-  phone: string | null;
   imageUrl: string | null;
   isActive: boolean;
   createdAt: Date;

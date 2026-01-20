@@ -347,8 +347,6 @@ model Organization {
   slug        String   @unique
   description String?
   website     String?
-  phone       String?
-  email       String?
   imageUrl    String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
