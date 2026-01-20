@@ -24,6 +24,14 @@ export const headerTitleStyles: CSSProperties = {
   color: 'var(--color-neutral-50)'
 };
 
+export const taglineStyles: CSSProperties = {
+  fontSize: 'var(--font-size-sm)',
+  fontWeight: 'var(--font-weight-medium)',
+  color: 'var(--color-primary-200)',
+  margin: '2px 0 0 0',
+  fontStyle: 'italic'
+};
+
 export const navStyles: CSSProperties = {
   display: 'flex',
   gap: 'var(--space-4)',

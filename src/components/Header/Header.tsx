@@ -3,7 +3,8 @@ import { TreePine, Home, Calendar, Tag, MapPin } from 'lucide-react';
 import { 
   headerStyles, 
   headerContainerStyles, 
-  headerTitleStyles, 
+  headerTitleStyles,
+  taglineStyles, 
   navStyles, 
   homeLinkStyles, 
   calendarLinkStyles,
@@ -15,10 +16,13 @@ export default function Header() {
   return (
     <header style={headerStyles}>
       <div style={headerContainerStyles}>
-        <h1 style={headerTitleStyles}>
-          <TreePine size={24} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
-          UpNorth Kids
-        </h1>
+        <div>
+          <h1 style={headerTitleStyles}>
+            <TreePine size={24} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
+            UpNorth Kids
+          </h1>
+          <p style={taglineStyles}>Big Fun, Up North.</p>
+        </div>
         
         <nav>
           <ul style={navStyles}>

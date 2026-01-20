@@ -1,7 +1,7 @@
 'use client';
 
 interface AdPlaceholderProps {
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'banner';
   label?: string;
 }
 
@@ -50,6 +50,21 @@ const adPlaceholderStyles = {
     textAlign: 'center' as const,
     fontWeight: 'var(--font-weight-medium)',
     marginBottom: 'var(--space-4)',
+  },
+  banner: {
+    width: '100%',
+    height: '120px',
+    backgroundColor: 'var(--color-neutral-100)',
+    border: '2px dashed var(--color-neutral-300)',
+    borderRadius: 'var(--radius-md)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 'var(--font-size-lg)',
+    color: 'var(--color-neutral-500)',
+    textAlign: 'center' as const,
+    fontWeight: 'var(--font-weight-medium)',
+    marginBottom: 'var(--space-6)',
   }
 };
 
@@ -62,6 +77,7 @@ export default function AdPlaceholder({ size = 'medium', label = 'Advertisement'
           {size === 'small' && '320x120'}
           {size === 'medium' && '320x200'}
           {size === 'large' && '320x280'}
+          {size === 'banner' && '728x120'}
         </div>
       </div>
     </div>

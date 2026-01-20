@@ -1,4 +1,5 @@
 import BaseLayout from '../components/BaseLayout/BaseLayout';
+import FeaturedActivities from '../components/FeaturedActivities/FeaturedActivities';
 import { Sparkles, Calendar, Target, Palette, Microscope, Music, BookOpen, Trees } from 'lucide-react';
 import {
   homeContainerStyles,
@@ -18,14 +19,15 @@ export default function Home() {
 
    const defaultRightRail = (
       <>
+        <FeaturedActivities />
         <AdPlaceholder size="medium" label="Sponsored Content" />
         <AdPlaceholder size="small" label="Local Business" />
-        <AdPlaceholder size="large" label="Family Activities" />
       </>
     );
   return (
     <BaseLayout rightRail={defaultRightRail}>
       <div style={homeContainerStyles}>
+        <AdPlaceholder size="banner" label="Featured Sponsor" />
         <section style={heroSectionStyles}>
           <h1 style={heroTitleStyles}>
             <Sparkles size={48} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-3)' }} />

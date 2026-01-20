@@ -37,14 +37,10 @@ export const mainContentStyles: CSSProperties = {
 };
 
 export const rightRailStyles: CSSProperties = {
-  position: 'sticky',
+ // position: 'sticky',
   top: 'var(--space-6)',
-  backgroundColor: 'var(--color-neutral-50)',
-  borderRadius: 'var(--radius-lg)',
-  border: '1px solid var(--color-neutral-200)',
-  padding: 'var(--space-6)',
-  maxHeight: 'calc(100vh - var(--space-12))',
-  overflowY: 'auto' as const,
+ // maxHeight: 'calc(100vh - var(--space-12))',
+ // overflowY: 'auto' as const,
   fontSize: 'var(--font-size-sm)',
   width: '320px'
 };
