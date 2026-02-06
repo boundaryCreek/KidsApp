@@ -78,6 +78,7 @@ export default async function CalendarServer() {
       parking: loc.parking as Location['parking'],
       publicTransport: loc.publicTransport,
       operatingHours: loc.operatingHours,
+      timezone: loc.timezone,
       socialMedia: loc.socialMedia,
       rating: loc.rating,
       reviewCount: loc.reviewCount,

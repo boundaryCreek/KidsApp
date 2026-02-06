@@ -134,7 +134,7 @@ export const categoriesList: CSSProperties = {
   display: 'flex',
   flexWrap: 'wrap',
   gap: 'var(--space-2)',
-
+  marginTop: 'var(--space-1)',
 };
 
 export const categoryTag: CSSProperties = {

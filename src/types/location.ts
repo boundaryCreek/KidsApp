@@ -62,7 +62,7 @@ export interface Location {
   parking: ParkingType | null;
   publicTransport: string | null;
   operatingHours?: any;
-  timezone?: string;
+  timezone: string | null;
   socialMedia?: any;
   rating: number | null;
   reviewCount: number | null;
