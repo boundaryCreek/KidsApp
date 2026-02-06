@@ -217,6 +217,7 @@ model Location {
   parking           ParkingType?
   publicTransport   String?
   operatingHours    Json?
+  timezone          String?          @default("America/Chicago")
   socialMedia       Json?
   rating            Float?
   reviewCount       Int?                @default(0)

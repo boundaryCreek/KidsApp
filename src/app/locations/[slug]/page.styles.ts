@@ -1,22 +1,23 @@
 import type { CSSProperties } from 'react';
 
-export const pageContainer: CSSProperties = {
-  minHeight: '100vh',
-  background: 'linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-secondary-50) 100%)',
-  padding: 'var(--space-8) 0',
+export const container: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 1fr) 320px',
+  gap: 'var(--space-6)',
+  alignItems: 'start',
 };
 
-export const container: CSSProperties = {
-  maxWidth: 'var(--container-6xl)',
-  margin: '0 auto',
-  padding: '0 var(--space-4)',
+export const pageContainer: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 'var(--space-8)',
 };
 
 export const breadcrumb: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   gap: 'var(--space-2)',
-  marginBottom: 'var(--space-6)',
+  marginBottom: 0,
   fontSize: 'var(--font-size-sm)',
   color: 'var(--color-neutral-600)',
 };
@@ -31,7 +32,6 @@ export const locationHeader: CSSProperties = {
   background: 'var(--color-surface)',
   borderRadius: 'var(--radius-xl)',
   padding: 'var(--space-8)',
-  marginBottom: 'var(--space-8)',
   boxShadow: 'var(--shadow-lg)',
   borderWidth: '1px',
   borderStyle: 'solid',
@@ -42,7 +42,7 @@ export const locationTitle: CSSProperties = {
   fontSize: 'var(--font-size-4xl)',
   fontWeight: 'var(--font-weight-bold)',
   color: 'var(--color-neutral-900)',
-  marginBottom: 'var(--space-4)',
+
   lineHeight: 'var(--line-height-tight)',
 };
 
@@ -80,6 +80,7 @@ export const locationDescription: CSSProperties = {
   lineHeight: 'var(--line-height-relaxed)',
   color: 'var(--color-neutral-700)',
   marginBottom: 'var(--space-6)',
+  whiteSpace: 'pre-wrap',
 };
 
 export const detailsGrid: CSSProperties = {
@@ -112,14 +113,14 @@ export const sectionTitle: CSSProperties = {
 export const contactInfo: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  gap: 'var(--space-3)',
+  gap: 'var(--space-2)',
 };
 
 export const contactItem: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: 'var(--space-3)',
-  padding: 'var(--space-2)',
+  gap: 'var(--space-2)',
+  padding: 'var(--space-1)',
   borderRadius: 'var(--radius-base)',
   transition: 'background-color 0.2s ease',
 };
@@ -133,7 +134,7 @@ export const categoriesList: CSSProperties = {
   display: 'flex',
   flexWrap: 'wrap',
   gap: 'var(--space-2)',
-  marginTop: 'var(--space-4)',
+
 };
 
 export const categoryTag: CSSProperties = {

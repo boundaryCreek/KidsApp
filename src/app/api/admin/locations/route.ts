@@ -86,10 +86,12 @@ export async function POST(request: NextRequest) {
       parking,
       publicTransport,
       operatingHours,
+      timezone,
       socialMedia,
       organizationId,
       cityId,
       categoryIds,
+      ageGroupIds,
     } = body;
 
     // Create the location with categories
@@ -112,12 +114,18 @@ export async function POST(request: NextRequest) {
         parking,
         publicTransport,
         operatingHours,
+        timezone: timezone || 'America/Chicago',
         socialMedia,
         organizationId,
         cityId: cityId || null,
         categories: categoryIds?.length
           ? {
               connect: categoryIds.map((id: string) => ({ id })),
+            }
+          : undefined,
+        ageGroups: ageGroupIds?.length
+          ? {
+              connect: ageGroupIds.map((id: string) => ({ id })),
             }
           : undefined,
       },
@@ -129,6 +137,9 @@ export async function POST(request: NextRequest) {
           select: { id: true, name: true, slug: true },
         },
         categories: {
+          select: { id: true, name: true, slug: true },
+        },
+        ageGroups: {
           select: { id: true, name: true, slug: true },
         },
       },

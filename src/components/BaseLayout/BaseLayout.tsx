@@ -1,6 +1,5 @@
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import AdPlaceholder from '../AdPlaceholder/AdPlaceholder';
 import { 
   baseLayoutStyles, 
   mainStyles, 
@@ -16,18 +15,32 @@ interface BaseLayoutProps {
 }
 
 export default function BaseLayout({ children, rightRail }: BaseLayoutProps) {
- 
+  const responsiveStyles = `
+    @media (max-width: 1024px) {
+      .base-layout__content {
+        grid-template-columns: 1fr !important;
+      }
+
+      .base-layout__rail {
+        width: 100% !important;
+      }
+    }
+  `;
 
   return (
     <div style={baseLayoutStyles}>
+      <style>{responsiveStyles}</style>
       <Header />
       <main style={mainStyles}>
-        <div style={rightRail ? contentWrapperWithRailStyles : contentWrapperSingleColumnStyles}>
+        <div
+          className="base-layout__content"
+          style={rightRail ? contentWrapperWithRailStyles : contentWrapperSingleColumnStyles}
+        >
           <div style={mainContentStyles}>
             {children}
           </div>
           {rightRail && (
-            <aside style={rightRailStyles}>
+            <aside className="base-layout__rail" style={rightRailStyles}>
               {rightRail}
             </aside>
           )}

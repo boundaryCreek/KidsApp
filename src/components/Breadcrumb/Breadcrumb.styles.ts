@@ -6,7 +6,6 @@ export const breadcrumbStyles: CSSProperties = {
   gap: 'var(--space-2)',
   fontSize: 'var(--font-size-sm)',
   color: 'var(--color-neutral-600)',
-  marginBottom: 'var(--space-6)',
 };
 
 export const breadcrumbItemStyles: CSSProperties = {

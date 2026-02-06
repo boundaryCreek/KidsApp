@@ -25,6 +25,9 @@ export async function GET(
         categories: {
           select: { id: true, name: true, slug: true },
         },
+        ageGroups: {
+          select: { id: true, name: true, slug: true },
+        },
         _count: {
           select: { activities: true, reviews: true },
         },
@@ -75,18 +78,23 @@ export async function PUT(
       parking,
       publicTransport,
       operatingHours,
+      timezone,
       socialMedia,
       organizationId,
       cityId,
       categoryIds,
+      ageGroupIds,
       isActive,
     } = body;
 
-    // First, disconnect all existing categories
+    // First, disconnect all existing categories and ageGroups
     await prisma.location.update({
       where: { id },
       data: {
         categories: {
+          set: [],
+        },
+        ageGroups: {
           set: [],
         },
       },
@@ -113,6 +121,7 @@ export async function PUT(
         parking,
         publicTransport,
         operatingHours,
+        timezone: timezone || 'America/Chicago',
         socialMedia,
         organizationId,
         cityId: cityId || null,
@@ -120,6 +129,11 @@ export async function PUT(
         categories: categoryIds?.length
           ? {
               connect: categoryIds.map((categoryId: string) => ({ id: categoryId })),
+            }
+          : undefined,
+        ageGroups: ageGroupIds?.length
+          ? {
+              connect: ageGroupIds.map((ageGroupId: string) => ({ id: ageGroupId })),
             }
           : undefined,
       },
@@ -131,6 +145,9 @@ export async function PUT(
           select: { id: true, name: true, slug: true },
         },
         categories: {
+          select: { id: true, name: true, slug: true },
+        },
+        ageGroups: {
           select: { id: true, name: true, slug: true },
         },
       },

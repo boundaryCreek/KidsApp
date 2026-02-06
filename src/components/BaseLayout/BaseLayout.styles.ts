@@ -10,21 +10,23 @@ export const baseLayoutStyles: CSSProperties = {
 
 export const mainStyles: CSSProperties = {
   flex: 1,
-  padding: 'var(--space-8) var(--space-6)',
-  maxWidth: 'var(--container-7xl)',
-  margin: '0 auto',
+  padding: 'var(--space-8) 0',
   width: '100%'
 };
 
 export const contentWrapperStyles: CSSProperties = {
   display: 'grid',
   gap: 'var(--space-8)',
-  alignItems: 'start'
+  alignItems: 'start',
+  maxWidth: 'var(--container-5xl)',
+  margin: '0 auto',
+  width: '100%',
+  padding: '0 var(--space-6)'
 };
 
 export const contentWrapperWithRailStyles: CSSProperties = {
   ...contentWrapperStyles,
-  gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 320px)',
+  gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 260px)',
 };
 
 export const contentWrapperSingleColumnStyles: CSSProperties = {
@@ -42,5 +44,6 @@ export const rightRailStyles: CSSProperties = {
  // maxHeight: 'calc(100vh - var(--space-12))',
  // overflowY: 'auto' as const,
   fontSize: 'var(--font-size-sm)',
-  width: '320px'
+  width: '100%',
+  maxWidth: '260px'
 };

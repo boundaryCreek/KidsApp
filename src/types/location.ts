@@ -13,6 +13,7 @@ export interface LocationFormOptions {
   organizations: Array<Pick<Organization, 'id' | 'name' | 'slug'>>;
   cities: Array<Pick<City, 'id' | 'name' | 'slug'>>;
   categories: Array<Pick<Category, 'id' | 'name' | 'slug'>>;
+  ageGroups: Array<{ id: string; name: string; minAge: number | null; maxAge: number | null }>;
 }
 
 export interface LocationFormData {
@@ -33,10 +34,12 @@ export interface LocationFormData {
   parking: ParkingType | '';
   publicTransport: string;
   operatingHours: string;
+  timezone: string;
   socialMedia: string;
   organizationId: string;
   cityId: string;
   categoryIds: string[];
+  ageGroupIds: string[];
   isActive: boolean;
 }
 
@@ -59,6 +62,7 @@ export interface Location {
   parking: ParkingType | null;
   publicTransport: string | null;
   operatingHours?: any;
+  timezone?: string;
   socialMedia?: any;
   rating: number | null;
   reviewCount: number | null;
@@ -69,6 +73,7 @@ export interface Location {
   city: City | null;
   organization: Organization;
   categories: Category[];
+  ageGroups?: Array<{ id: string; name: string; slug: string }>;
   _count?: {
     activities: number;
     reviews?: number;

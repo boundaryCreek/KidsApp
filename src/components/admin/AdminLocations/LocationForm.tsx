@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { ArrowLeft, Save } from 'lucide-react';
 import {
   adminActionsStyles,
@@ -20,14 +21,36 @@ import {
   TextAreaField,
   TextField,
 } from '../AdminLayout/FormFields';
+import OperatingHoursInput from './OperatingHoursInput';
+import SocialMediaInput from './SocialMediaInput';
 import {
   AccessibilityFeature,
   Location,
   LocationFormData,
   LocationFormOptions,
   LocationType,
+  MapLocation,
   ParkingType,
 } from '../../../types';
+
+// Dynamically import MapLocationPicker with no SSR
+const MapLocationPicker = dynamic(() => import('../../MapLocationPicker'), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        height: '400px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--color-neutral-100)',
+        borderRadius: 'var(--radius-lg)',
+      }}
+    >
+      Loading map...
+    </div>
+  ),
+});
 
 interface LocationFormProps {
   location?: Location;
@@ -61,6 +84,7 @@ const initialOptions: LocationFormOptions = {
   organizations: [],
   cities: [],
   categories: [],
+  ageGroups: [],
 };
 
 const generateSlug = (value: string) =>
@@ -109,16 +133,19 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
     parking: (location?.parking as ParkingType) || '',
     publicTransport: location?.publicTransport || '',
     operatingHours: location?.operatingHours ? JSON.stringify(location.operatingHours) : '',
+    timezone: location?.timezone || 'America/Chicago',
     socialMedia: location?.socialMedia ? JSON.stringify(location.socialMedia) : '',
     organizationId: location?.organization?.id || '',
     cityId: location?.city?.id || '',
     categoryIds: location?.categories?.map((category) => category.id) || [],
+    ageGroupIds: location?.ageGroups?.map((ageGroup) => ageGroup.id) || [],
     isActive: location?.isActive ?? true,
   });
 
-  const organizationOptions = useMemo(() => options.organizations, [options.organizations]);
-  const cityOptions = useMemo(() => options.cities, [options.cities]);
-  const categoryOptions = useMemo(() => options.categories, [options.categories]);
+  const organizationOptions = useMemo(() => options.organizations || [], [options.organizations]);
+  const cityOptions = useMemo(() => options.cities || [], [options.cities]);
+  const categoryOptions = useMemo(() => options.categories || [], [options.categories]);
+  const ageGroupOptions = useMemo(() => options.ageGroups || [], [options.ageGroups]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -129,6 +156,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
           organizations: data.organizations || [],
           cities: data.cities || [],
           categories: data.categories || [],
+          ageGroups: data.ageGroups || [],
         });
       } catch (error) {
         console.error('Error fetching location form options:', error);
@@ -154,6 +182,28 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
     }
   };
 
+  const handleLocationSelect = (location: MapLocation) => {
+    setFormData((prev) => ({
+      ...prev,
+      latitude: location.latitude.toFixed(6),
+      longitude: location.longitude.toFixed(6),
+      address: location.address || location.displayName || prev.address,
+    }));
+
+    // Try to match the city from the map location to an existing city in the dropdown
+    if (location.city && cityOptions.length > 0) {
+      const matchingCity = cityOptions.find(
+        (city) => city.name.toLowerCase() === location.city?.toLowerCase()
+      );
+      if (matchingCity) {
+        setFormData((prev) => ({
+          ...prev,
+          cityId: matchingCity.id,
+        }));
+      }
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
@@ -176,10 +226,12 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
       parking: formData.parking || null,
       publicTransport: formData.publicTransport || null,
       operatingHours: parseJsonField(formData.operatingHours),
+      timezone: formData.timezone || 'America/Chicago',
       socialMedia: parseJsonField(formData.socialMedia),
       organizationId: formData.organizationId,
       cityId: formData.cityId || null,
       categoryIds: formData.categoryIds,
+      ageGroupIds: formData.ageGroupIds,
       ...(isEdit ? { isActive: formData.isActive } : {}),
     };
 
@@ -296,6 +348,32 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
               disabled={loading}
             />
           </GridFields>
+          <div style={{ marginBottom: 'var(--space-4)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)',
+                marginBottom: 'var(--space-2)',
+                color: 'var(--color-neutral-700)',
+              }}
+            >
+              Select Location on Map
+            </label>
+            <MapLocationPicker
+              initialLocation={
+                formData.latitude && formData.longitude
+                  ? {
+                      latitude: parseFloat(formData.latitude),
+                      longitude: parseFloat(formData.longitude),
+                    }
+                  : undefined
+              }
+              onLocationSelect={handleLocationSelect}
+              height="400px"
+              searchEnabled={true}
+            />
+          </div>
           <GridFields columns={3}>
             <TextField
               label="Capacity"
@@ -375,6 +453,14 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
               disabled={loading}
             />
           </GridFields>
+          <MultiSelectList
+            label="Age Groups"
+            options={ageGroupOptions}
+            value={formData.ageGroupIds}
+            onChange={(value) => handleInputChange('ageGroupIds', value)}
+            helperText="Select suitable age groups for this location"
+            disabled={loading}
+          />
         </FormSection>
 
         <FormSection title="Amenities & Accessibility">
@@ -397,22 +483,57 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
         </FormSection>
 
         <FormSection title="Advanced">
-          <GridFields columns={2}>
-            <TextAreaField
-              label="Operating Hours (JSON)"
+          <div style={{ marginBottom: 'var(--space-6)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)',
+                marginBottom: 'var(--space-3)',
+                color: 'var(--color-neutral-700)',
+              }}
+            >
+              Operating Hours
+            </label>
+            <OperatingHoursInput
               value={formData.operatingHours}
               onChange={(value) => handleInputChange('operatingHours', value)}
-              placeholder='{"monday": "9:00-17:00"}'
               disabled={loading}
             />
-            <TextAreaField
-              label="Social Media (JSON)"
+          </div>
+          <SelectField
+            label="Timezone"
+            options={[
+              { id: 'America/New_York', name: 'Eastern Time (ET)' },
+              { id: 'America/Chicago', name: 'Central Time (CT)' },
+              { id: 'America/Denver', name: 'Mountain Time (MT)' },
+              { id: 'America/Phoenix', name: 'Mountain Time - Arizona (MT)' },
+              { id: 'America/Los_Angeles', name: 'Pacific Time (PT)' },
+              { id: 'America/Anchorage', name: 'Alaska Time (AKT)' },
+              { id: 'Pacific/Honolulu', name: 'Hawaii Time (HT)' },
+            ]}
+            value={formData.timezone}
+            onChange={(value) => handleInputChange('timezone', value)}
+            disabled={loading}
+          />
+          <div style={{ marginBottom: 'var(--space-6)' }}>
+            <label
+              style={{
+                display: 'block',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)',
+                marginBottom: 'var(--space-3)',
+                color: 'var(--color-neutral-700)',
+              }}
+            >
+              Social Media Links
+            </label>
+            <SocialMediaInput
               value={formData.socialMedia}
               onChange={(value) => handleInputChange('socialMedia', value)}
-              placeholder='{"instagram": "@example"}'
               disabled={loading}
             />
-          </GridFields>
+          </div>
           {isEdit && (
             <CheckboxField
               label="Active"

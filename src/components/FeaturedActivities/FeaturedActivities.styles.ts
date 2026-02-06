@@ -6,6 +6,10 @@ export const carouselContainerStyles: CSSProperties = {
   padding: 'var(--space-4)',
   boxShadow: 'var(--shadow-sm)',
   marginBottom: 'var(--space-4)',
+  width: '100%',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
 };
 
 export const carouselHeaderStyles: CSSProperties = {
@@ -46,6 +50,9 @@ export const activityCardStyles: CSSProperties = {
   transition: 'var(--transition-colors)',
   cursor: 'pointer',
   height: '140px',
+  width: '100%',
+  minWidth: 0,
+  boxSizing: 'border-box',
 };
 
 export const activityImageStyles: CSSProperties = {

@@ -5,7 +5,7 @@ import ActivityCard from '../../../components/ActivityCard/ActivityCard';
 import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import SectionHeader from '../../../components/SectionHeader/SectionHeader';
 import CategoryList from '../../../components/CategoryList/CategoryList';
-import ContactInfo from '../../../components/ContactInfo/ContactInfo';
+import AdPlaceholder from '../../../components/AdPlaceholder/AdPlaceholder';
 import { prisma } from '../../../lib/prisma';
 import { Location, LocationType } from '../../../types';
 import {
@@ -91,6 +91,46 @@ const formatCost = (activity: Activity) => {
   return 'Contact for pricing';
 };
 
+const convertTo12Hour = (time: string): string => {
+  const [hours, minutes] = time.split(':');
+  const hour = parseInt(hours, 10);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${minutes} ${ampm}`;
+};
+
+const formatOperatingHours = (hours: string): string => {
+  if (hours.toLowerCase() === 'closed') return 'Closed';
+  const [start, end] = hours.split('-');
+  return `${convertTo12Hour(start.trim())} - ${convertTo12Hour(end.trim())}`;
+};
+
+const DAYS_ORDER = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+const isLocationOpen = (operatingHours: Record<string, string>): boolean => {
+  const now = new Date();
+  const currentDay = DAYS_ORDER[now.getDay()];
+  const currentTime = now.getHours() * 60 + now.getMinutes(); // minutes since midnight
+  
+  const todayHours = operatingHours[currentDay];
+  if (!todayHours || todayHours.toLowerCase() === 'closed') {
+    return false;
+  }
+  
+  try {
+    const [start, end] = todayHours.split('-');
+    const [startHour, startMin] = start.trim().split(':').map(Number);
+    const [endHour, endMin] = end.trim().split(':').map(Number);
+    
+    const startTime = startHour * 60 + startMin;
+    const endTime = endHour * 60 + endMin;
+    
+    return currentTime >= startTime && currentTime <= endTime;
+  } catch (error) {
+    return false;
+  }
+};
+
 export default async function LocationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   
@@ -103,6 +143,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
       city: true,
       organization: true,
       categories: true,
+      ageGroups: true,
       activities: {
         where: {
           isActive: true,
@@ -136,113 +177,128 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
   const LocationIcon = getLocationTypeIcon(location.type);
 
   return (
-    <BaseLayout>
+    <BaseLayout
+      rightRail={(
+        <>
+          <AdPlaceholder size="medium" label="Advertisement" />
+          <AdPlaceholder size="medium" label="Advertisement" />
+        </>
+      )}
+    >
       <div style={styles.pageContainer}>
-        <div style={styles.container}>
-          {/* Breadcrumb */}
-          <Breadcrumb
-            items={[
-              { href: '/', label: 'Home' },
-              { href: '/locations', label: 'Locations' },
-            ]}
-            currentPage={location.name}
-          />
+        {/* Breadcrumb */}
+        <Breadcrumb
+          items={[
+            { href: '/', label: 'Home' },
+            { href: '/locations', label: 'Locations' },
+          ]}
+          currentPage={location.name}
+        />
 
-          {/* Location Header */}
-          <header style={styles.locationHeader}>
+        {/* Location Header */}
+        <header style={styles.locationHeader}>
+          {location.rating && (
             <div style={styles.locationMeta}>
-              <div style={styles.typeTag}>
-                <LocationIcon size={16} />
-                {formatLocationType(location.type)}
+              <div style={styles.rating}>
+                <Star size={16} fill="currentColor" />
+                <span>{location.rating}</span>
+                <span style={{ color: 'var(--color-neutral-500)' }}>
+                  ({location.reviewCount} reviews)
+                </span>
               </div>
-              {location.rating && (
-                <div style={styles.rating}>
-                  <Star size={16} fill="currentColor" />
-                  <span>{location.rating}</span>
-                  <span style={{ color: 'var(--color-neutral-500)' }}>
-                    ({location.reviewCount} reviews)
-                  </span>
-                </div>
-              )}
             </div>
+          )}
 
-            <h1 style={styles.locationTitle}>{location.name}</h1>
-            
-            {location.description && (
-              <p style={styles.locationDescription}>{location.description}</p>
+          <h1 style={styles.locationTitle}>{location.name}</h1>
+          <CategoryList categories={location.categories} />
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', marginBottom: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
+            {location.address && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                <MapPin size={16} />
+                <span>{location.address}</span>
+              </div>
             )}
 
-            <CategoryList categories={location.categories} />
-          </header>
+            {location.phone && (
+              <a 
+                href={`tel:${location.phone}`} 
+                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', textDecoration: 'none', color: 'inherit' }}
+              >
+                <Phone size={16} />
+                <span>{location.phone}</span>
+              </a>
+            )}
 
-          {/* Details Grid */}
-          <div style={styles.detailsGrid}>
-            {/* Activities Section */}
+            {location.website && (
+              <a 
+                href={location.website} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', textDecoration: 'none', color: 'var(--color-primary-600)' }}
+              >
+                <Globe size={16} />
+                <span>Visit Website</span>
+              </a>
+            )}
+          </div>
+
+        </header>
+
+        
+
+        {/* Operating Hours & More Details - Two Column Layout */}
+        {location.operatingHours && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
+            {/* Operating Hours Section */}
             <section style={styles.detailsSection}>
-              <SectionHeader 
-                icon={<Activity size={20} />} 
-                title="Activities" 
-                count={location._count.activities} 
-              />
-              
-              {location.activities.length > 0 ? (
-                <div style={styles.activitiesGrid}>
-                  {location.activities.map((activity) => (
-                    <ActivityCard
-                      key={activity.id}
-                      id={activity.id}
-                      title={activity.title}
-                      slug={activity.slug}
-                      description={activity.description}
-                      costMin={activity.costMin}
-                      costMax={activity.costMax}
-                      costDisplay={activity.costDisplay}
-                      isFree={activity.isFree}
-                      imageUrl={activity.imageUrl}
-                      ageGroup={activity.ageGroup}
-                      categories={activity.categories}
-                      _count={activity._count}
-                      showLocation={false}
-                      showCategories={true}
-                      showStats={true}
-                      showAgeGroup={true}
-                      showOrganizer={false}
-                      showCost={true}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p style={{ color: 'var(--color-neutral-600)' }}>
-                  No activities available at this location yet.
-                </p>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 style={{ ...styles.sectionTitle, margin: 0 }}>
+                  <Calendar size={20} />
+                  Operating Hours
+                </h2>
+                {(() => {
+                  const open = isLocationOpen(location.operatingHours as Record<string, string>);
+                  return (
+                    <span
+                      style={{
+                        padding: 'var(--space-1) var(--space-3)',
+                        borderRadius: 'var(--radius-full)',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: 'var(--font-weight-semibold)',
+                        backgroundColor: open ? 'var(--color-success-100)' : 'var(--color-error-100)',
+                        color: open ? 'var(--color-success-700)' : 'var(--color-error-700)',
+                      }}
+                    >
+                      {open ? 'Open Now' : 'Closed'}
+                    </span>
+                  );
+                })()}
+              </div>
+              <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-neutral-700)', marginTop: 'var(--space-4)' }}>
+                {DAYS_ORDER
+                  .filter(day => (location.operatingHours as Record<string, string>)[day])
+                  .map((day) => {
+                    const hours = (location.operatingHours as Record<string, string>)[day];
+                    return (
+                      <div key={day} style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        padding: 'var(--space-2) 0',
+                        borderBottom: '1px solid var(--color-neutral-200)'
+                      }}>
+                        <span style={{ fontWeight: 'var(--font-weight-medium)', textTransform: 'capitalize' }}>{day}</span>
+                        <span>{typeof hours === 'string' ? formatOperatingHours(hours) : 'Closed'}</span>
+                      </div>
+                    );
+                  })}
+              </div>
             </section>
 
-            {/* Contact & Info Section */}
+            {/* More Details Section */}
             <section style={styles.detailsSection}>
-              <h2 style={styles.sectionTitle}>
-                <MapPin size={20} />
-                Contact & Info
-              </h2>
+            
               
               <div style={styles.contactInfo}>
-                {location.address && (
-                  <div style={styles.contactItem}>
-                    <MapPin size={16} />
-                    <span style={styles.contactText}>{location.address}</span>
-                  </div>
-                )}
-
-                {location.phone && (
-                  <a 
-                    href={`tel:${location.phone}`} 
-                    style={{ ...styles.contactItem, textDecoration: 'none' }}
-                  >
-                    <Phone size={16} />
-                    <span style={styles.contactText}>{location.phone}</span>
-                  </a>
-                )}
-
                 {location.email && (
                   <a 
                     href={`mailto:${location.email}`} 
@@ -253,52 +309,44 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                   </a>
                 )}
 
-                {location.website && (
-                  <a 
-                    href={location.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    style={{ ...styles.contactItem, textDecoration: 'none' }}
-                  >
-                    <Globe size={16} />
-                    <span style={styles.contactText}>Visit Website</span>
-                  </a>
-                )}
+              
+                
 
-                {location.city && (
-                  <div style={styles.contactItem}>
-                    <Building2 size={16} />
-                    <span style={styles.contactText}>{location.city.name}</span>
-                  </div>
-                )}
-
-                {location.organization && (
-                  <div style={styles.contactItem}>
-                    <Users size={16} />
-                    <span style={styles.contactText}>{location.organization.name}</span>
-                  </div>
-                )}
-
-                {location.capacity && (
-                  <div style={styles.contactItem}>
-                    <Users size={16} />
-                    <span style={styles.contactText}>Capacity: {location.capacity}</span>
-                  </div>
-                )}
+               
               </div>
+
+              {location.ageGroups && location.ageGroups.length > 0 && (
+                <>
+                  
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                    {location.ageGroups.map((ageGroup: any) => (
+                      <span
+                        key={ageGroup.id}
+                        style={{
+                          display: 'inline-block',
+                          padding: 'var(--space-1) var(--space-3)',
+                          backgroundColor: 'var(--color-primary-100)',
+                          color: 'var(--color-primary-700)',
+                          borderRadius: 'var(--radius-full)',
+                          fontSize: 'var(--font-size-sm)',
+                          fontWeight: 'var(--font-weight-medium)',
+                        }}
+                      >
+                        {ageGroup.name}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {location.amenities.length > 0 && (
                 <>
-                  <h3 style={{ ...styles.sectionTitle, fontSize: 'var(--font-size-lg)', marginTop: 'var(--space-6)' }}>
+                  <h3 style={{ ...styles.sectionTitle, fontSize: 'var(--font-size-lg)', marginTop: 'var(--space-4)', marginBottom: 'var(--space-2)' }}>
                     Amenities
                   </h3>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {location.amenities.map((amenity, index) => (
-                      <li key={index} style={{ 
-                        padding: 'var(--space-1) 0', 
-                        color: 'var(--color-neutral-700)',
-                        fontSize: 'var(--font-size-sm)'
-                      }}>
+                      <li key={index} style={styles.contactItem}>
                         • {amenity}
                       </li>
                     ))}
@@ -307,7 +355,56 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
               )}
             </section>
           </div>
-        </div>
+        )}
+
+        {/* Additional Info Section */}
+        <section style={styles.detailsSection}>
+     
+          {location.description && (
+            <p style={styles.locationDescription}>{location.description}</p>
+          )}
+        </section>
+
+        {/* Activities Section */}
+        <section style={styles.detailsSection}>
+          <SectionHeader 
+            icon={<Activity size={20} />} 
+            title="Activities" 
+            count={location._count.activities} 
+          />
+          
+          {location.activities.length > 0 ? (
+            <div style={styles.activitiesGrid}>
+              {location.activities.map((activity) => (
+                <ActivityCard
+                  key={activity.id}
+                  id={activity.id}
+                  title={activity.title}
+                  slug={activity.slug}
+                  description={activity.description}
+                  costMin={activity.costMin}
+                  costMax={activity.costMax}
+                  costDisplay={activity.costDisplay}
+                  isFree={activity.isFree}
+                  imageUrl={activity.imageUrl}
+                  ageGroup={activity.ageGroup}
+                  categories={activity.categories}
+                  _count={activity._count}
+                  showLocation={false}
+                  showCategories={true}
+                  showStats={true}
+                  showAgeGroup={true}
+                  showOrganizer={false}
+                  showCost={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: 'var(--color-neutral-600)' }}>
+              No activities available at this location yet.
+            </p>
+          )}
+        </section>
       </div>
     </BaseLayout>
   );

@@ -114,13 +114,13 @@ export function SelectField({
       </label>
       <select
         style={adminInputStyles}
-        value={value}
+        value={value || ''}
         onChange={(e) => onChange(e.target.value)}
         required={required}
         disabled={disabled}
       >
         <option value="">{placeholder}</option>
-        {options.map((option) => (
+        {options && options.map((option) => (
           <option key={option.id} value={option.id}>
             {option.name}
           </option>
