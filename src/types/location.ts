@@ -22,6 +22,7 @@ export interface LocationFormData {
   slug: string;
   type: LocationType;
   description: string;
+  summary: string;
   address: string;
   latitude: string;
   longitude: string;
@@ -51,6 +52,7 @@ export interface Location {
   slug: string;
   type: LocationType;
   description: string;
+  summary: string | null;
   address: string | null;
   latitude: number | null;
   longitude: number | null;
@@ -64,6 +66,7 @@ export interface Location {
   parking: ParkingType | null;
   publicTransport: string | null;
   operatingHours?: any;
+  hoursUpdatedAt: Date | null;
   timezone: string | null;
   socialMedia?: any;
   costRange: CostRange | null;

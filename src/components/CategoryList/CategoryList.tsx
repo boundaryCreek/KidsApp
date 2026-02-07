@@ -9,7 +9,7 @@ const categoryListStyles = {
     display: 'flex',
     flexWrap: 'wrap' as const,
     gap: 'var(--space-2)',
-    marginBottom: 'var(--space-4)',
+   
   },
   categoryTag: {
     display: 'inline-flex',

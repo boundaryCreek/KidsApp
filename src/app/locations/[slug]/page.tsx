@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import BaseLayout from '../../../components/BaseLayout/BaseLayout';
 import ActivityCard from '../../../components/ActivityCard/ActivityCard';
 import LocationCard from '../../../components/LocationCard/LocationCard';
@@ -8,6 +9,7 @@ import SectionHeader from '../../../components/SectionHeader/SectionHeader';
 import CategoryList from '../../../components/CategoryList/CategoryList';
 import AdPlaceholder from '../../../components/AdPlaceholder/AdPlaceholder';
 import { prisma } from '../../../lib/prisma';
+import { generateLocationMetadata } from '../../../lib/metadata';
 import { Location, LocationType, formatCostRange } from '../../../types';
 import {
   MapPin, Phone, Mail, Globe, Star, Activity, Users, Building2, 
@@ -132,6 +134,41 @@ const isLocationOpen = (operatingHours: Record<string, string>): boolean => {
   }
 };
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  
+  const location = await prisma.location.findFirst({
+    where: {
+      slug: slug,
+      isActive: true,
+    },
+    select: {
+      name: true,
+      description: true,
+      address: true,
+      slug: true,
+      imageUrl: true,
+      city: {
+        select: { name: true },
+      },
+    },
+  });
+
+  if (!location) {
+    return {
+      title: 'Location Not Found | Kids App',
+    };
+  }
+
+  return generateLocationMetadata(
+    location.name,
+    location.description || 'Discover activities and information about this location',
+    `${location.address}${location.city ? ', ' + location.city.name : ''}`,
+    location.slug,
+    location.imageUrl || undefined
+  );
+}
+
 export default async function LocationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   
@@ -229,13 +266,31 @@ console.log('Fetched location:', location);
             </div>
           )}
 
-          <h1 style={styles.locationTitle}>{location.name}</h1>
+        
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)', marginBottom: 'var(--space-6)', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+            {location.costRange && (
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--space-2)',
+                backgroundColor: 'var(--color-success-100)',
+                color: 'var(--color-success-700)',
+                padding: 'var(--space-1) var(--space-3)',
+                borderRadius: 'var(--radius-full)',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)',
+                border: '1px solid var(--color-success-200)',
+                
+              }}>
+                {formatCostRange(location.costRange)}
+              </span>
+            )}
             <CategoryList categories={location.categories} />
           </div>
+            <h1 style={styles.locationTitle}>{location.name}</h1>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', marginBottom: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', color: 'var(--color-neutral-700)' }}>
             {location.address && (
               <a 
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.address}${location.city ? ', ' + location.city.name : ''}`)}`}
@@ -270,6 +325,12 @@ console.log('Fetched location:', location);
               </a>
             )}
           </div>
+
+          {location.summary && (
+            <p style={{ ...styles.locationDescription, fontStyle: 'italic', marginTop: 'var(--space-4)', marginBottom: 0, color: 'var(--color-neutral-600)' }}>
+              {location.summary}
+            </p>
+          )}
 
         </header>
 
@@ -347,7 +408,7 @@ console.log('Fetched location:', location);
               {location.ageGroups && location.ageGroups.length > 0 && (
                 <>
                   
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
                     {location.ageGroups.map((ageGroup: any) => (
                       <span
                         key={ageGroup.id}
@@ -370,9 +431,7 @@ console.log('Fetched location:', location);
 
               {location.amenities.length > 0 && (
                 <>
-                  <h3 style={{ ...styles.sectionTitle, fontSize: 'var(--font-size-lg)', marginTop: 'var(--space-4)', marginBottom: 'var(--space-2)' }}>
-                    Amenities
-                  </h3>
+                 
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {location.amenities.map((amenity, index) => (
                       <li key={index} style={styles.contactItem}>
@@ -390,7 +449,22 @@ console.log('Fetched location:', location);
         <section style={styles.detailsSection}>
      
           {location.description && (
-            <p style={styles.locationDescription}>{location.description}</p>
+            <div>
+              <p style={styles.locationDescription}>{location.description}</p>
+              <div style={{
+                backgroundColor: 'var(--color-info-50)',
+                border: '1px solid var(--color-info-200)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-4)',
+                marginTop: 'var(--space-4)',
+                fontSize: 'var(--font-size-sm)',
+                color: 'var(--color-info-700)',
+              }}>
+                <p style={{ margin: 0 }}>
+                  Please check with the location to confirm details and hours before visiting.
+                </p>
+              </div>
+            </div>
           )}
         </section>
 

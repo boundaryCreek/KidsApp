@@ -211,6 +211,7 @@ model Location {
   slug              String              @unique
   type              LocationType
   description       String
+  summary           String?             // Short description for previews
   address           String?
   latitude          Float?
   longitude         Float?
@@ -224,6 +225,7 @@ model Location {
   parking           ParkingType?
   publicTransport   String?
   operatingHours    Json?
+  hoursUpdatedAt    DateTime?           // Track when hours were last updated
   timezone          String?          @default("America/Chicago")
   socialMedia       Json?
   costRange         CostRange?

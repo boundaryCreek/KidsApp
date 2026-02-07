@@ -128,6 +128,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
     slug: location?.slug || '',
     type: location?.type || 'VENUE',
     description: location?.description || '',
+    summary: location?.summary || '',
     address: location?.address || '',
     latitude: location?.latitude !== null && location?.latitude !== undefined ? location.latitude.toString() : '',
     longitude: location?.longitude !== null && location?.longitude !== undefined ? location.longitude.toString() : '',
@@ -222,6 +223,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
       slug: formData.slug,
       type: formData.type,
       description: formData.description,
+      summary: formData.summary || null,
       address: formData.address || null,
       latitude: formData.latitude ? parseFloat(formData.latitude) : null,
       longitude: formData.longitude ? parseFloat(formData.longitude) : null,
@@ -320,6 +322,13 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
             value={formData.description}
             onChange={(value) => handleInputChange('description', value)}
             required
+            disabled={loading}
+          />
+          <TextAreaField
+            label="Summary (Short description for previews)"
+            value={formData.summary}
+            onChange={(value) => handleInputChange('summary', value)}
+            placeholder="Brief 1-2 sentence summary of this location"
             disabled={loading}
           />
         </FormSection>
