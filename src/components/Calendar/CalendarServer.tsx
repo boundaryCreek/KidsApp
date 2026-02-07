@@ -80,6 +80,7 @@ export default async function CalendarServer() {
       operatingHours: loc.operatingHours,
       timezone: loc.timezone,
       socialMedia: loc.socialMedia,
+      costRange: loc.costRange,
       rating: loc.rating,
       reviewCount: loc.reviewCount,
       averageRating: loc.averageRating,

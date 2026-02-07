@@ -25,6 +25,7 @@ import OperatingHoursInput from './OperatingHoursInput';
 import SocialMediaInput from './SocialMediaInput';
 import {
   AccessibilityFeature,
+  CostRange,
   Location,
   LocationFormData,
   LocationFormOptions,
@@ -70,6 +71,13 @@ const parkingOptions: Array<{ id: ParkingType; name: string }> = [
   { id: 'PAID', name: 'Paid' },
   { id: 'STREET', name: 'Street' },
   { id: 'NONE', name: 'None' },
+];
+
+const costRangeOptions: Array<{ id: CostRange; name: string }> = [
+  { id: 'FREE', name: 'Free' },
+  { id: 'BUDGET', name: '$ ($1-10)' },
+  { id: 'MODERATE', name: '$$ ($20-30)' },
+  { id: 'EXPENSIVE', name: '$$$ ($30+)' },
 ];
 
 const accessibilityOptions: Array<{ id: AccessibilityFeature; name: string }> = [
@@ -131,6 +139,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
     accessibility: (location?.accessibility as AccessibilityFeature[]) || [],
     capacity: location?.capacity !== null && location?.capacity !== undefined ? location.capacity.toString() : '',
     parking: (location?.parking as ParkingType) || '',
+    costRange: (location?.costRange as CostRange) || '',
     publicTransport: location?.publicTransport || '',
     operatingHours: location?.operatingHours ? JSON.stringify(location.operatingHours) : '',
     timezone: location?.timezone || 'America/Chicago',
@@ -224,6 +233,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
       capacity: formData.capacity ? parseInt(formData.capacity, 10) : null,
       accessibility: formData.accessibility,
       parking: formData.parking || null,
+      costRange: formData.costRange || null,
       publicTransport: formData.publicTransport || null,
       operatingHours: parseJsonField(formData.operatingHours),
       timezone: formData.timezone || 'America/Chicago',
@@ -391,14 +401,22 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
               placeholder="Select parking"
               disabled={loading}
             />
-            <TextField
-              label="Public Transport"
-              value={formData.publicTransport}
-              onChange={(value) => handleInputChange('publicTransport', value)}
-              placeholder="Nearest station or bus routes"
+            <SelectField
+              label="Cost Range"
+              options={costRangeOptions}
+              value={formData.costRange || ''}
+              onChange={(value) => handleInputChange('costRange', value as CostRange)}
+              placeholder="Select cost range"
               disabled={loading}
             />
           </GridFields>
+          <TextField
+            label="Public Transport"
+            value={formData.publicTransport}
+            onChange={(value) => handleInputChange('publicTransport', value)}
+            placeholder="Nearest station or bus routes"
+            disabled={loading}
+          />
         </FormSection>
 
         <FormSection title="Contact & Media">

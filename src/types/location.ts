@@ -2,6 +2,7 @@ import { Category, City, Organization } from './common';
 
 export type LocationType = 'VENUE' | 'ORGANIZATION' | 'FACILITY' | 'OUTDOOR' | 'ONLINE';
 export type ParkingType = 'FREE' | 'PAID' | 'STREET' | 'NONE';
+export type CostRange = 'FREE' | 'BUDGET' | 'MODERATE' | 'EXPENSIVE';
 export type AccessibilityFeature =
   | 'WHEELCHAIR_ACCESSIBLE'
   | 'STROLLER_FRIENDLY'
@@ -36,6 +37,7 @@ export interface LocationFormData {
   operatingHours: string;
   timezone: string;
   socialMedia: string;
+  costRange: CostRange | '';
   organizationId: string;
   cityId: string;
   categoryIds: string[];
@@ -64,6 +66,7 @@ export interface Location {
   operatingHours?: any;
   timezone: string | null;
   socialMedia?: any;
+  costRange: CostRange | null;
   rating: number | null;
   reviewCount: number | null;
   averageRating: number | null;
@@ -79,3 +82,38 @@ export interface Location {
     reviews?: number;
   };
 }
+
+// Helper function to format cost range display
+export const formatCostRange = (costRange: CostRange | null): string | null => {
+  if (!costRange) return null;
+  
+  switch (costRange) {
+    case 'FREE':
+      return 'Free';
+    case 'BUDGET':
+      return '$';
+    case 'MODERATE':
+      return '$$';
+    case 'EXPENSIVE':
+      return '$$$';
+    default:
+      return null;
+  }
+};
+
+export const getCostRangeSymbol = (costRange: CostRange | null): string | null => {
+  if (!costRange) return null;
+  
+  switch (costRange) {
+    case 'FREE':
+      return 'Free';
+    case 'BUDGET':
+      return '$';
+    case 'MODERATE':
+      return '$$';
+    case 'EXPENSIVE':
+      return '$$$';
+    default:
+      return null;
+  }
+};

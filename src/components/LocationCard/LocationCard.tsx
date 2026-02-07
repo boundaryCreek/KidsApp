@@ -144,11 +144,6 @@ export default function LocationCard({
 
         {showStats && _count && (
           <div style={styles.locationStats}>
-            <div style={styles.statItem}>
-              <Activity size={16} />
-              <span>{_count.activities} activities</span>
-            </div>
-            
             {rating && (
               <div style={styles.rating}>
                 <Star size={16} />

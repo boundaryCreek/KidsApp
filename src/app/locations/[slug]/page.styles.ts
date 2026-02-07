@@ -85,9 +85,9 @@ export const locationDescription: CSSProperties = {
 
 export const detailsGrid: CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: '2fr 1fr',
-  gap: 'var(--space-8)',
-  marginBottom: 'var(--space-8)',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+  gap: 'var(--space-6)',
+ 
 };
 
 export const detailsSection: CSSProperties = {

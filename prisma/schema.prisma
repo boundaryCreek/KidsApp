@@ -32,6 +32,13 @@ enum ParkingType {
   NONE
 }
 
+enum CostRange {
+  FREE
+  BUDGET      // $: 1-10
+  MODERATE    // $$: 20-30
+  EXPENSIVE   // $$$: 30+
+}
+
 enum UserRole {
   USER
   PARENT
@@ -219,6 +226,7 @@ model Location {
   operatingHours    Json?
   timezone          String?          @default("America/Chicago")
   socialMedia       Json?
+  costRange         CostRange?
   rating            Float?
   reviewCount       Int?                @default(0)
   averageRating     Float?              @default(0)

@@ -105,8 +105,6 @@ export const locationStats: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  paddingTop: 'var(--space-3)',
-  borderTop: '1px solid var(--color-neutral-200)',
   marginTop: 'auto',
 };
 

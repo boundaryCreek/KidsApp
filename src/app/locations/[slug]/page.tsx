@@ -2,12 +2,13 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import BaseLayout from '../../../components/BaseLayout/BaseLayout';
 import ActivityCard from '../../../components/ActivityCard/ActivityCard';
+import LocationCard from '../../../components/LocationCard/LocationCard';
 import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import SectionHeader from '../../../components/SectionHeader/SectionHeader';
 import CategoryList from '../../../components/CategoryList/CategoryList';
 import AdPlaceholder from '../../../components/AdPlaceholder/AdPlaceholder';
 import { prisma } from '../../../lib/prisma';
-import { Location, LocationType } from '../../../types';
+import { Location, LocationType, formatCostRange } from '../../../types';
 import {
   MapPin, Phone, Mail, Globe, Star, Activity, Users, Building2, 
   Trees, Warehouse, ChevronRight, Calendar, DollarSign
@@ -174,8 +175,27 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
-  const LocationIcon = getLocationTypeIcon(location.type);
+  // Fetch other locations from the same organization
+  const otherLocations = await prisma.location.findMany({
+    where: {
+      organizationId: location.organizationId,
+      slug: { not: slug },
+      isActive: true,
+    },
+    include: {
+      city: true,
+      organization: true,
+      categories: true,
+      _count: {
+        select: { activities: true, reviews: true },
+      },
+    },
+    take: 6,
+    orderBy: { name: 'asc' },
+  });
 
+  const LocationIcon = getLocationTypeIcon(location.type);
+console.log('Fetched location:', location);
   return (
     <BaseLayout
       rightRail={(
@@ -210,13 +230,22 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           )}
 
           <h1 style={styles.locationTitle}>{location.name}</h1>
-          <CategoryList categories={location.categories} />
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)', marginBottom: 'var(--space-6)', flexWrap: 'wrap' }}>
+            <CategoryList categories={location.categories} />
+          </div>
+          
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', marginBottom: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
             {location.address && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.address}${location.city ? ', ' + location.city.name : ''}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}
+              >
                 <MapPin size={16} />
-                <span>{location.address}</span>
-              </div>
+                <span>{location.address}{location.city && `, ${location.city.name}`}</span>
+              </a>
             )}
 
             {location.phone && (
@@ -248,7 +277,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
 
         {/* Operating Hours & More Details - Two Column Layout */}
         {location.operatingHours && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
+          <div style={styles.detailsGrid}>
             {/* Operating Hours Section */}
             <section style={styles.detailsSection}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -366,14 +395,14 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
         </section>
 
         {/* Activities Section */}
-        <section style={styles.detailsSection}>
-          <SectionHeader 
-            icon={<Activity size={20} />} 
-            title="Activities" 
-            count={location._count.activities} 
-          />
-          
-          {location.activities.length > 0 ? (
+        {location.activities.length > 0 && (
+          <section style={styles.detailsSection}>
+            <SectionHeader 
+              icon={<Activity size={20} />} 
+              title="Activities" 
+              count={location._count.activities} 
+            />
+            
             <div style={styles.activitiesGrid}>
               {location.activities.map((activity) => (
                 <ActivityCard
@@ -399,12 +428,42 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                 />
               ))}
             </div>
-          ) : (
-            <p style={{ color: 'var(--color-neutral-600)' }}>
-              No activities available at this location yet.
-            </p>
-          )}
-        </section>
+          </section>
+        )}
+
+        {/* Other Locations Section */}
+        {otherLocations.length > 0 && (
+          <section style={styles.detailsSection}>
+            <SectionHeader 
+              icon={<MapPin size={20} />} 
+              title="Other Locations" 
+              count={otherLocations.length} 
+            />
+            
+            <div style={styles.activitiesGrid}>
+              {otherLocations.map((otherLocation) => (
+                <LocationCard
+                  key={otherLocation.id}
+                  id={otherLocation.id}
+                  name={otherLocation.name}
+                  slug={otherLocation.slug}
+                  type={otherLocation.type as LocationType}
+                  description={otherLocation.description}
+                  address={otherLocation.address}
+                  city={otherLocation.city}
+                  organization={otherLocation.organization}
+                  categories={otherLocation.categories}
+                  rating={otherLocation.rating}
+                  reviewCount={otherLocation.reviewCount || 0}
+                  _count={otherLocation._count}
+                  showCategories={true}
+                  showStats={true}
+                  showTypeTag={true}
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </BaseLayout>
   );

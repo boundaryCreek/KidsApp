@@ -205,4 +205,45 @@ body {
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-xl { box-shadow: var(--shadow-xl); }
 
+/* Mobile Menu Styles */
+@media (max-width: 768px) {
+  [for="nav-toggle"] {
+    display: block !important;
+  }
+  
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-primary-700);
+    display: none !important;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+  }
+  
+  #nav-toggle:checked ~ nav {
+    display: flex !important;
+  }
+  
+  nav ul {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  
+  nav ul li {
+    width: 100%;
+  }
+  
+  nav ul li a {
+    width: 100%;
+    display: block !important;
+  }
+  
+  /* Make location details stack on mobile */
+  [style*="gridTemplateColumns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
 
