@@ -4,7 +4,7 @@ import { prisma } from '../../../../lib/prisma';
 // GET /api/admin/options - Get all options for form dropdowns
 export async function GET() {
   try {
-    const [locations, ageGroups, categories, organizations, cities] = await Promise.all([
+    const [locations, ageGroups, categories, organizations, cities, tags] = await Promise.all([
       prisma.location.findMany({
         where: { isActive: true },
         select: { id: true, name: true, slug: true },
@@ -29,6 +29,11 @@ export async function GET() {
         select: { id: true, name: true, slug: true },
         orderBy: { name: 'asc' },
       }),
+      prisma.tag.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true, slug: true },
+        orderBy: { name: 'asc' },
+      }),
     ]);
 
     return NextResponse.json({
@@ -37,6 +42,7 @@ export async function GET() {
       categories,
       organizations,
       cities,
+      tags,
     });
   } catch (error) {
     console.error('Error fetching options:', error);

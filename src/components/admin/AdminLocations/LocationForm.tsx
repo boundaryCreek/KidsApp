@@ -149,6 +149,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
     cityId: location?.city?.id || '',
     categoryIds: location?.categories?.map((category) => category.id) || [],
     ageGroupIds: location?.ageGroups?.map((ageGroup) => ageGroup.id) || [],
+    tagIds: location?.tags?.map((tag) => tag.id) || [],
     isActive: location?.isActive ?? true,
   });
 
@@ -156,6 +157,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
   const cityOptions = useMemo(() => options.cities || [], [options.cities]);
   const categoryOptions = useMemo(() => options.categories || [], [options.categories]);
   const ageGroupOptions = useMemo(() => options.ageGroups || [], [options.ageGroups]);
+  const tagOptions = useMemo(() => options.tags || [], [options.tags]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -167,6 +169,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
           cities: data.cities || [],
           categories: data.categories || [],
           ageGroups: data.ageGroups || [],
+          tags: data.tags || [],
         });
       } catch (error) {
         console.error('Error fetching location form options:', error);
@@ -244,6 +247,7 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
       cityId: formData.cityId || null,
       categoryIds: formData.categoryIds,
       ageGroupIds: formData.ageGroupIds,
+      tagIds: formData.tagIds,
       ...(isEdit ? { isActive: formData.isActive } : {}),
     };
 
@@ -486,6 +490,14 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
             value={formData.ageGroupIds}
             onChange={(value) => handleInputChange('ageGroupIds', value)}
             helperText="Select suitable age groups for this location"
+            disabled={loading}
+          />
+          <MultiSelectList
+            label="Tags"
+            options={tagOptions}
+            value={formData.tagIds}
+            onChange={(value) => handleInputChange('tagIds', value)}
+            helperText="Select tags to help users discover this location"
             disabled={loading}
           />
         </FormSection>

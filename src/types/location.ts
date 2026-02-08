@@ -15,6 +15,7 @@ export interface LocationFormOptions {
   cities: Array<Pick<City, 'id' | 'name' | 'slug'>>;
   categories: Array<Pick<Category, 'id' | 'name' | 'slug'>>;
   ageGroups: Array<{ id: string; name: string; minAge: number | null; maxAge: number | null }>;
+  tags?: Array<{ id: string; name: string; slug: string }>;
 }
 
 export interface LocationFormData {
@@ -43,6 +44,7 @@ export interface LocationFormData {
   cityId: string;
   categoryIds: string[];
   ageGroupIds: string[];
+  tagIds: string[];
   isActive: boolean;
 }
 
@@ -79,6 +81,7 @@ export interface Location {
   city: City | null;
   organization: Organization;
   categories: Category[];
+  tags?: Array<{ id: string; name: string; slug: string; color?: string | null }>;
   ageGroups?: Array<{ id: string; name: string; slug: string }>;
   _count?: {
     activities: number;

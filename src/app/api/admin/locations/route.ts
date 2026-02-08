@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
       cityId,
       categoryIds,
       ageGroupIds,
+      tagIds,
     } = body;
 
     // Create the location with categories
@@ -131,6 +132,11 @@ export async function POST(request: NextRequest) {
         ageGroups: ageGroupIds?.length
           ? {
               connect: ageGroupIds.map((id: string) => ({ id })),
+            }
+          : undefined,
+        tags: tagIds?.length
+          ? {
+              connect: tagIds.map((id: string) => ({ id })),
             }
           : undefined,
       },

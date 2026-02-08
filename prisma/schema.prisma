@@ -52,6 +52,23 @@ enum ReviewStatus {
   REJECTED
 }
 
+// Tag model for flexible location labeling
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  color     String?  // Optional color for UI display
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  locations Location[] @relation("LocationTag")
+
+  @@map("tags")
+  @@index([slug])
+  @@index([name])
+}
+
 // City model (updated with relation to LocationList)
 model City {
   id          String   @id @default(cuid())
@@ -245,6 +262,7 @@ model Location {
   activities        Activity[]           @relation("ActivityLocation")
   categories        Category[]           @relation("LocationCategory")
   ageGroups         AgeGroup[]           @relation("LocationAgeGroup")
+  tags              Tag[]                @relation("LocationTag")
   reviews           Review[]
 
   locationLists     LocationList[]       @relation("LocationListLocation")

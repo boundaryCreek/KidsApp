@@ -86,6 +86,7 @@ export async function PUT(
       cityId,
       categoryIds,
       ageGroupIds,
+      tagIds,
       isActive,
     } = body;
 
@@ -97,6 +98,9 @@ export async function PUT(
           set: [],
         },
         ageGroups: {
+          set: [],
+        },
+        tags: {
           set: [],
         },
       },
@@ -139,6 +143,11 @@ export async function PUT(
         ageGroups: ageGroupIds?.length
           ? {
               connect: ageGroupIds.map((ageGroupId: string) => ({ id: ageGroupId })),
+            }
+          : undefined,
+        tags: tagIds?.length
+          ? {
+              connect: tagIds.map((tagId: string) => ({ id: tagId })),
             }
           : undefined,
       },

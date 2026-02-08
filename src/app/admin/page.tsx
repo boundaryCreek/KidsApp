@@ -124,6 +124,12 @@ export default async function AdminDashboard() {
       icon: Tag,
     },
     {
+      title: 'Manage Tags',
+      description: 'Create and organize location tags',
+      href: '/admin/tags',
+      icon: Tag,
+    },
+    {
       title: 'Review Activities',
       description: 'View and manage all activities',
       href: '/admin/activities',
