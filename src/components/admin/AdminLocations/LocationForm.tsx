@@ -472,7 +472,6 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
               options={organizationOptions}
               value={formData.organizationId}
               onChange={(value) => handleInputChange('organizationId', value)}
-              required
               disabled={loading}
             />
             <MultiSelectList

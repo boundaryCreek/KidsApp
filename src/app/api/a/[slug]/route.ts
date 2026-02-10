@@ -22,7 +22,7 @@ export async function GET(
             categories: true,
           },
         },
-        ageGroup: true,
+        ageGroups: true,
         categories: true,
         reviews: {
           where: {

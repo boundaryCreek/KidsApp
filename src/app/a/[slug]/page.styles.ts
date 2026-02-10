@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 
 export const pageContainer: CSSProperties = {
   minHeight: '100vh',
-  background: 'linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-secondary-50) 100%)',
+  backgroundColor: 'var(--color-background)',
   padding: 'var(--space-8) 0',
 };
 

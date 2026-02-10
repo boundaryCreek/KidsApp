@@ -63,7 +63,7 @@ export default function EditActivityPage() {
   return (
     <AdminLayout>
       <AdminPageLayout title="Edit Activity">
-        <div style={{ marginBottom: 'var(--space-6)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)' }}>
           <Link
             href="/admin/activities"
             style={{
@@ -79,6 +79,39 @@ export default function EditActivityPage() {
           >
             ← Back to Activities
           </Link>
+          
+          <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
+            <Link
+              href={`/admin/events?activityId=${activityId}`}
+              style={{
+                padding: 'var(--space-2) var(--space-4)',
+                backgroundColor: 'var(--color-neutral-200)',
+                color: 'var(--color-text)',
+                textDecoration: 'none',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)',
+                transition: 'var(--transition-colors)',
+              }}
+            >
+              View Events
+            </Link>
+            <Link
+              href={`/admin/events/new?activityId=${activityId}`}
+              style={{
+                padding: 'var(--space-2) var(--space-4)',
+                backgroundColor: 'var(--color-primary-600)',
+                color: 'var(--color-neutral-50)',
+                textDecoration: 'none',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: 'var(--font-weight-medium)',
+                transition: 'var(--transition-colors)',
+              }}
+            >
+              + Add Event
+            </Link>
+          </div>
         </div>
         <ActivityForm activity={activity} isEdit />
       </AdminPageLayout>

@@ -17,7 +17,7 @@ export interface Activity {
   createdAt: Date;
   updatedAt: Date;
   location: Location | null;
-  ageGroup?: AgeGroup;
+  ageGroups?: AgeGroup[];
   categories: Category[];
   reviews?: Review[];
   events?: Event[];
@@ -31,7 +31,12 @@ export interface Activity {
 export type ActivityDetails = Activity;
 
 // Utility function for formatting activity cost
-export const formatActivityCost = (activity: Activity): string => {
+export const formatActivityCost = (activity: {
+  isFree: boolean;
+  costDisplay: string | null;
+  costMin: number | null;
+  costMax: number | null;
+}): string => {
   if (activity.isFree) return 'Free';
   if (activity.costDisplay) return activity.costDisplay;
   if (activity.costMin && activity.costMax) {

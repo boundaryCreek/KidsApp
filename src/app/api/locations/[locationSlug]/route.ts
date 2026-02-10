@@ -27,7 +27,7 @@ export async function GET(
                 slug: true,
               }
             },
-            ageGroup: true,
+            ageGroups: true,
             categories: true,
             _count: {
               select: {

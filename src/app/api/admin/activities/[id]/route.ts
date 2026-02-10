@@ -19,7 +19,7 @@ export async function GET(
         location: {
           select: { id: true, name: true, slug: true },
         },
-        ageGroup: {
+        ageGroups: {
           select: { id: true, name: true, minAge: true, maxAge: true },
         },
         categories: {
@@ -72,17 +72,20 @@ export async function PUT(
       recurrence,
       recurrenceFrequency,
       recurrenceInterval,
-      ageGroupId,
+      ageGroupIds,
       locationId,
       categoryIds,
       isActive,
     } = body;
 
-    // First, disconnect all existing categories
+    // First, disconnect all existing categories and age groups
     await prisma.activity.update({
       where: { id },
       data: {
         categories: {
+          set: [],
+        },
+        ageGroups: {
           set: [],
         },
       },
@@ -106,9 +109,13 @@ export async function PUT(
         recurrence,
         recurrenceFrequency,
         recurrenceInterval: recurrenceInterval ? parseInt(recurrenceInterval) : null,
-        ageGroupId,
         locationId: locationId || null,
         isActive: Boolean(isActive),
+        ageGroups: ageGroupIds?.length
+          ? {
+              connect: ageGroupIds.map((agId: string) => ({ id: agId })),
+            }
+          : undefined,
         categories: categoryIds?.length
           ? {
               connect: categoryIds.map((categoryId: string) => ({ id: categoryId })),
@@ -119,7 +126,7 @@ export async function PUT(
         location: {
           select: { id: true, name: true, slug: true },
         },
-        ageGroup: {
+        ageGroups: {
           select: { id: true, name: true, minAge: true, maxAge: true },
         },
         categories: {

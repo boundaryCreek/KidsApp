@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
           location: {
             select: { id: true, name: true, slug: true },
           },
-          ageGroup: {
+          ageGroups: {
             select: { id: true, name: true, minAge: true, maxAge: true },
           },
           categories: {
@@ -83,12 +83,12 @@ export async function POST(request: NextRequest) {
       recurrence,
       recurrenceFrequency,
       recurrenceInterval,
-      ageGroupId,
+      ageGroupIds,
       locationId,
       categoryIds,
     } = body;
 
-    // Create the activity with categories
+    // Create the activity with categories and age groups
     const activity = await prisma.activity.create({
       data: {
         title,
@@ -105,8 +105,12 @@ export async function POST(request: NextRequest) {
         recurrence,
         recurrenceFrequency,
         recurrenceInterval: recurrenceInterval ? parseInt(recurrenceInterval) : null,
-        ageGroupId,
         locationId: locationId || null,
+        ageGroups: ageGroupIds?.length
+          ? {
+              connect: ageGroupIds.map((id: string) => ({ id })),
+            }
+          : undefined,
         categories: categoryIds?.length
           ? {
               connect: categoryIds.map((id: string) => ({ id })),
@@ -117,7 +121,7 @@ export async function POST(request: NextRequest) {
         location: {
           select: { id: true, name: true, slug: true },
         },
-        ageGroup: {
+        ageGroups: {
           select: { id: true, name: true, minAge: true, maxAge: true },
         },
         categories: {

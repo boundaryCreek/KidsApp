@@ -41,7 +41,7 @@ export interface FeaturedActivity {
   createdAt: Date;
   updatedAt: Date;
   location: FeaturedLocation | null;
-  ageGroup: FeaturedAgeGroup | null;
+  ageGroups: FeaturedAgeGroup[];
   categories: FeaturedCategory[];
   _count: {
     favorites: number;
@@ -79,7 +79,7 @@ export default async function FeaturedActivities({ className }: FeaturedActiviti
             color: true,
           }
         },
-        ageGroup: {
+        ageGroups: {
           select: {
             id: true,
             name: true,
@@ -120,7 +120,7 @@ export default async function FeaturedActivities({ className }: FeaturedActiviti
       createdAt: activity.createdAt,
       updatedAt: activity.updatedAt,
       location: activity.location,
-      ageGroup: activity.ageGroup,
+      ageGroups: activity.ageGroups,
       categories: activity.categories,
       _count: {
         favorites: activity._count.favorites,

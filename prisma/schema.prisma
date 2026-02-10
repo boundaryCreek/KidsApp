@@ -199,13 +199,11 @@ model Activity {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  ageGroupId  String
-  ageGroup    AgeGroup @relation("ActivityAgeGroup", fields: [ageGroupId], references: [id])
-
   locationId  String?
   location    Location? @relation("ActivityLocation", fields: [locationId], references: [id], onDelete: SetNull)
 
   events      Event[]
+  ageGroups   AgeGroup[] @relation("ActivityAgeGroup")
   categories  Category[] @relation("ActivityCategory")
   favorites   Favorite[]
   reviews     Review[]
@@ -216,7 +214,6 @@ model Activity {
   @@map("activities")
   @@index([slug])
   @@index([title])
-  @@index([ageGroupId])
   @@index([locationId])
   @@index([isFree, featured])
 }
@@ -253,8 +250,8 @@ model Location {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
 
-  organizationId    String
-  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId    String?
+  organization      Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
 
   cityId            String?
   city              City?               @relation(fields: [cityId], references: [id], onDelete: SetNull)

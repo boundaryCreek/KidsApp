@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
             color: true,
           }
         },
-        ageGroup: {
+        ageGroups: {
           select: {
             id: true,
             name: true,

@@ -11,7 +11,8 @@ import {
   Star,
   List,
   Plus,
-  Eye
+  Eye,
+  Clock
 } from 'lucide-react';
 import {
   adminPageHeaderStyles,
@@ -128,6 +129,12 @@ export default async function AdminDashboard() {
       description: 'Create and organize location tags',
       href: '/admin/tags',
       icon: Tag,
+    },
+    {
+      title: 'Manage Events',
+      description: 'Create and schedule activity events',
+      href: '/admin/events',
+      icon: Clock,
     },
     {
       title: 'Review Activities',

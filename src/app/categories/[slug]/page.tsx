@@ -48,7 +48,7 @@ export default async function CategoryDetailsPage({ params }: { params: Promise<
               organization: true,
             },
           },
-          ageGroup: true,
+          ageGroups: true,
           _count: {
             select: {
               favorites: true,
@@ -136,7 +136,7 @@ export default async function CategoryDetailsPage({ params }: { params: Promise<
                   isFree={activity.isFree}
                   imageUrl={activity.imageUrl}
                   location={activity.location}
-                  ageGroup={activity.ageGroup}
+                  ageGroups={activity.ageGroups}
                   _count={activity._count}
                   showLocation={true}
                   showCategories={false}

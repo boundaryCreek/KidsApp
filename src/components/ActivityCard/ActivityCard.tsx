@@ -31,7 +31,7 @@ interface ActivityCardProps {
   featured?: boolean;
   imageUrl: string | null;
   location?: Location | null;
-  ageGroup?: AgeGroup | null;
+  ageGroups?: AgeGroup[];
   categories?: Category[];
   _count?: {
     favorites: number;
@@ -74,7 +74,7 @@ export default function ActivityCard({
   featured = false,
   imageUrl,
   location,
-  ageGroup,
+  ageGroups = [],
   categories = [],
   _count,
   showLocation = true,
@@ -113,10 +113,10 @@ export default function ActivityCard({
             <h3 style={styles.activityTitle}>{title}</h3>
             
             <div style={styles.activityMeta}>
-              {showAgeGroup && ageGroup && (
+              {showAgeGroup && ageGroups && ageGroups.length > 0 && (
                 <div style={styles.ageGroupTag}>
                   <Users size={12} />
-                  {ageGroup.name}
+                  {ageGroups.map(ag => ag.name).join(', ')}
                 </div>
               )}
               

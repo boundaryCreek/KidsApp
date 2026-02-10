@@ -30,7 +30,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
           categories: true,
         },
       },
-      ageGroup: true,
+      ageGroups: true,
       categories: true,
       events: {
         where: {
@@ -88,10 +88,10 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
           {/* Activity Header */}
           <header style={styles.activityHeader}>
             <div style={styles.activityMeta}>
-              {activity.ageGroup && (
+              {activity.ageGroups && activity.ageGroups.length > 0 && (
                 <div style={styles.ageGroupTag}>
                   <Users size={16} />
-                  {activity.ageGroup.name}
+                  {activity.ageGroups.map(ag => ag.name).join(', ')}
                 </div>
               )}
               
@@ -109,13 +109,6 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
             </div>
 
             <h1 style={styles.activityTitle}>{activity.title}</h1>
-            
-            <div style={styles.organizerSection}>
-              <Building2 size={20} />
-              <div>
-                <strong>Organized by:</strong> {activity.organizer}
-              </div>
-            </div>
 
             {activity.description && (
               <p style={styles.activityDescription}>{activity.description}</p>
@@ -143,6 +136,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ slug:
                     website={activity.location.website}
                     city={activity.location.city}
                     organization={activity.location.organization}
+                    variant="grid"
                   />
                 </div>
 

@@ -26,12 +26,12 @@ interface Activity {
     name: string;
     slug: string;
   };
-  ageGroup: {
+  ageGroups: Array<{
     id: string;
     name: string;
     minAge: number | null;
     maxAge: number | null;
-  };
+  }>;
   categories: Array<{
     id: string;
     name: string;
@@ -77,8 +77,13 @@ export default function ActivitiesList() {
       const response = await fetch(`/api/admin/activities?${params}`);
       const data: ActivitiesResponse = await response.json();
       
-      setActivities(data.activities);
-      setPagination(data.pagination);
+      setActivities(data.activities || []);
+      setPagination(data.pagination || {
+        page: 1,
+        limit: 10,
+        total: 0,
+        pages: 1,
+      });
     } catch (error) {
       console.error('Error fetching activities:', error);
     } finally {
@@ -185,7 +190,8 @@ export default function ActivitiesList() {
               </tr>
             </thead>
             <tbody>
-              {activities.map((activity) => (
+              {activities && activities.length > 0 ? (
+                activities.map((activity) => (
                 <tr key={activity.id}>
                   <td style={adminTableCellStyles}>
                     <div>
@@ -206,7 +212,29 @@ export default function ActivitiesList() {
                     {activity.location?.name || 'No location'}
                   </td>
                   <td style={adminTableCellStyles}>
-                    {activity.ageGroup.name}
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 'var(--space-1)',
+                    }}>
+                      {activity.ageGroups && activity.ageGroups.length > 0 
+                        ? activity.ageGroups.map(ag => (
+                            <span
+                              key={ag.id}
+                              style={{
+                                backgroundColor: 'var(--color-neutral-100)',
+                                padding: 'var(--space-1) var(--space-2)',
+                                borderRadius: 'var(--radius-sm)',
+                                fontSize: 'var(--font-size-xs)',
+                                color: 'var(--color-text-secondary)',
+                              }}
+                            >
+                              {ag.name}
+                            </span>
+                          ))
+                        : 'No age groups'
+                      }
+                    </div>
                   </td>
                   <td style={adminTableCellStyles}>
                     <div style={{
@@ -214,20 +242,23 @@ export default function ActivitiesList() {
                       flexWrap: 'wrap',
                       gap: 'var(--space-1)',
                     }}>
-                      {activity.categories.map(cat => (
-                        <span
-                          key={cat.id}
-                          style={{
-                            backgroundColor: 'var(--color-neutral-100)',
-                            padding: 'var(--space-1) var(--space-2)',
-                            borderRadius: 'var(--radius-sm)',
-                            fontSize: 'var(--font-size-xs)',
-                            color: 'var(--color-text-secondary)',
-                          }}
-                        >
-                          {cat.name}
-                        </span>
-                      ))}
+                      {activity.categories && activity.categories.length > 0
+                        ? activity.categories.map(cat => (
+                            <span
+                              key={cat.id}
+                              style={{
+                                backgroundColor: 'var(--color-neutral-100)',
+                                padding: 'var(--space-1) var(--space-2)',
+                                borderRadius: 'var(--radius-sm)',
+                                fontSize: 'var(--font-size-xs)',
+                                color: 'var(--color-text-secondary)',
+                              }}
+                            >
+                              {cat.name}
+                            </span>
+                          ))
+                        : 'No categories'
+                      }
                     </div>
                   </td>
                   <td style={adminTableCellStyles}>
@@ -314,7 +345,19 @@ export default function ActivitiesList() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              ) : (
+                <tr>
+                  <td colSpan={8} style={{
+                    ...adminTableCellStyles,
+                    textAlign: 'center',
+                    padding: 'var(--space-8)',
+                    color: 'var(--color-text-secondary)',
+                  }}>
+                    No activities found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
 

@@ -35,7 +35,7 @@ interface FormData {
   imageUrl: string;
   featured: boolean;
   isActive: boolean;
-  ageGroupId: string;
+  ageGroupIds: string[];
   locationId: string;
   categoryIds: string[];
 }
@@ -74,7 +74,7 @@ export default function ActivityForm({ activity, isEdit = false }: ActivityFormP
     imageUrl: activity?.imageUrl || '',
     featured: activity?.featured || false,
     isActive: activity?.isActive !== undefined ? activity.isActive : true,
-    ageGroupId: activity?.ageGroup?.id || '',
+    ageGroupIds: activity?.ageGroups?.map((ag: any) => ag.id) || [],
     locationId: activity?.location?.id || '',
     categoryIds: activity?.categories?.map((c: any) => c.id) || [],
   });
@@ -205,14 +205,65 @@ export default function ActivityForm({ activity, isEdit = false }: ActivityFormP
         </FormSection>
 
         <FormSection title="Relationships">
-          <SelectField
-            label="Age Group"
-            options={options.ageGroups}
-            value={formData.ageGroupId}
-            onChange={(value) => handleInputChange('ageGroupId', value)}
-            required
-            disabled={loading}
-          />
+          <div style={{ marginBottom: 'var(--space-4)' }}>
+            <label style={{ 
+              display: 'block', 
+              marginBottom: 'var(--space-2)', 
+              fontWeight: 'var(--font-weight-medium)',
+              fontSize: 'var(--font-size-sm)',
+              color: 'var(--color-text)'
+            }}>
+              Age Groups (Optional)
+            </label>
+            <div style={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              gap: 'var(--space-2)',
+              padding: 'var(--space-3)',
+              backgroundColor: 'var(--color-neutral-50)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--color-border)'
+            }}>
+              {options.ageGroups.map((ageGroup) => (
+                <label
+                  key={ageGroup.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--space-2)',
+                    padding: 'var(--space-2) var(--space-3)',
+                    backgroundColor: formData.ageGroupIds.includes(ageGroup.id) 
+                      ? 'var(--color-primary-100)' 
+                      : 'var(--color-background)',
+                    border: formData.ageGroupIds.includes(ageGroup.id)
+                      ? '2px solid var(--color-primary-600)'
+                      : '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius-md)',
+                    cursor: 'pointer',
+                    fontSize: 'var(--font-size-sm)',
+                    transition: 'var(--transition-colors)',
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.ageGroupIds.includes(ageGroup.id)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setFormData((prev) => ({
+                        ...prev,
+                        ageGroupIds: checked
+                          ? [...prev.ageGroupIds, ageGroup.id]
+                          : prev.ageGroupIds.filter((id) => id !== ageGroup.id),
+                      }));
+                    }}
+                    disabled={loading}
+                    style={{ cursor: 'pointer' }}
+                  />
+                  {ageGroup.name}
+                </label>
+              ))}
+            </div>
+          </div>
           <SelectField
             label="Location"
             options={options.locations}

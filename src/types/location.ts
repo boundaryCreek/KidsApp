@@ -79,7 +79,7 @@ export interface Location {
   createdAt: Date;
   updatedAt: Date;
   city: City | null;
-  organization: Organization;
+  organization: Organization | null;
   categories: Category[];
   tags?: Array<{ id: string; name: string; slug: string; color?: string | null }>;
   ageGroups?: Array<{ id: string; name: string; slug: string }>;

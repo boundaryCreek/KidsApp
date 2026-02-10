@@ -8,6 +8,8 @@ import Breadcrumb from '../../../components/Breadcrumb/Breadcrumb';
 import SectionHeader from '../../../components/SectionHeader/SectionHeader';
 import CategoryList from '../../../components/CategoryList/CategoryList';
 import AdPlaceholder from '../../../components/AdPlaceholder/AdPlaceholder';
+import ShareToolbar from '../../../components/ShareToolbar/ShareToolbar';
+import ContactInfo from '../../../components/ContactInfo/ContactInfo';
 import { prisma } from '../../../lib/prisma';
 import { generateLocationMetadata } from '../../../lib/metadata';
 import { Location, LocationType, formatCostRange } from '../../../types';
@@ -182,12 +184,15 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
       organization: true,
       categories: true,
       ageGroups: true,
+      tags: {
+        select: { id: true, name: true, slug: true, color: true },
+      },
       activities: {
         where: {
           isActive: true,
         },
         include: {
-          ageGroup: true,
+          ageGroups: true,
           categories: true,
           _count: {
             select: {
@@ -232,6 +237,12 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
   });
 
   const LocationIcon = getLocationTypeIcon(location.type);
+  
+  // Get gradient colors from categories or tags
+  const getGradientColors = () => 'var(--color-success-600)';
+
+  const primaryColor = getGradientColors();
+  
 console.log('Fetched location:', location);
   return (
     <BaseLayout
@@ -243,6 +254,7 @@ console.log('Fetched location:', location);
       )}
     >
       <div style={styles.pageContainer}>
+
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
@@ -251,10 +263,85 @@ console.log('Fetched location:', location);
           ]}
           currentPage={location.name}
         />
+        
+        {/* Hero Section - Always show */}
+        <div
+          style={{
+            ...styles.heroSection,
+            ...(location.imageUrl ? {} : styles.heroSectionAuto),
+          }}
+        >
+          {location.imageUrl ? (
+            // Image Hero
+            <>
+              <div style={styles.heroImageContainer}>
+                <img 
+                  src={location.imageUrl} 
+                  alt={location.name}
+                  style={styles.heroImage}
+                />
+                <div style={styles.heroOverlay} />
+              </div>
+              <div style={styles.heroContent}>
+                <h1 style={styles.heroTitle}>{location.name}</h1>
+                {location.summary && (
+                  <p style={styles.heroSummary}>{location.summary}</p>
+                )}
+                {location.tags && location.tags.length > 0 && (
+                  <div style={styles.heroTags}>
+                    {location.tags.map((tag) => (
+                      <span
+                        key={tag.id}
+                        style={{
+                          ...styles.heroTag,
+                          backgroundColor: tag.color || 'var(--color-primary-600)',
+                        }}
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            // Gradient Hero Fallback
+            <>
+              <div 
+                style={{
+                  ...styles.heroGradientContainer,
+                  background: `linear-gradient(135deg, ${primaryColor} 0%, color-mix(in srgb, ${primaryColor} 85%, transparent) 50%, color-mix(in srgb, ${primaryColor} 70%, transparent) 100%)`,
+                }}
+              />
+              <div style={styles.heroContentRelative}>
+                <h1 style={styles.heroTitle}>{location.name}</h1>
+                {location.summary && (
+                  <p style={styles.heroSummary}>{location.summary}</p>
+                )}
+                {location.tags && location.tags.length > 0 && (
+                  <div style={styles.heroTags}>
+                    {location.tags.map((tag) => (
+                      <span
+                        key={tag.id}
+                        style={{
+                          ...styles.heroTag,
+                          backgroundColor: tag.color || 'var(--color-primary-600)',
+                        }}
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+      
 
         {/* Location Header */}
-        <header style={styles.locationHeader}>
-          {location.rating && (
+        <header style={styles.locationHeader}>          {location.rating && (
             <div style={styles.locationMeta}>
               <div style={styles.rating}>
                 <Star size={16} fill="currentColor" />
@@ -266,192 +353,146 @@ console.log('Fetched location:', location);
             </div>
           )}
 
-        
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-            {location.costRange && (
-              <span style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 'var(--space-2)',
-                backgroundColor: 'var(--color-success-100)',
-                color: 'var(--color-success-700)',
-                padding: 'var(--space-1) var(--space-3)',
-                borderRadius: 'var(--radius-full)',
-                fontSize: 'var(--font-size-sm)',
-                fontWeight: 'var(--font-weight-medium)',
-                border: '1px solid var(--color-success-200)',
-                
-              }}>
-                {formatCostRange(location.costRange)}
-              </span>
-            )}
-            <CategoryList categories={location.categories} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+              <CategoryList categories={location.categories} />
+              {location.costRange && (
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 'var(--space-2)',
+                  backgroundColor: 'var(--color-success-100)',
+                  color: 'var(--color-success-700)',
+                  padding: 'var(--space-1) var(--space-3)',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: 'var(--font-size-sm)',
+                  fontWeight: 'var(--font-weight-medium)',
+                  border: '1px solid var(--color-success-200)',
+                }}>
+                  {formatCostRange(location.costRange)}
+                </span>
+              )}
+            </div>
+            
+            <ShareToolbar 
+              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/locations/${location.slug}`}
+              title={location.name}
+              description={location.summary || location.description || undefined}
+            />
           </div>
-            <h1 style={styles.locationTitle}>{location.name}</h1>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', color: 'var(--color-neutral-700)' }}>
-            {location.address && (
-              <a 
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.address}${location.city ? ', ' + location.city.name : ''}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}
-              >
-                <MapPin size={16} />
-                <span>{location.address}{location.city && `, ${location.city.name}`}</span>
-              </a>
-            )}
-
-            {location.phone && (
-              <a 
-                href={`tel:${location.phone}`} 
-                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', textDecoration: 'none', color: 'inherit' }}
-              >
-                <Phone size={16} />
-                <span>{location.phone}</span>
-              </a>
-            )}
-
-            {location.website && (
-              <a 
-                href={location.website} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', textDecoration: 'none', color: 'var(--color-primary-600)' }}
-              >
-                <Globe size={16} />
-                <span>Visit Website</span>
-              </a>
-            )}
-          </div>
-
-          {location.summary && (
-            <p style={{ ...styles.locationDescription, fontStyle: 'italic', marginTop: 'var(--space-4)', marginBottom: 0, color: 'var(--color-neutral-600)' }}>
-              {location.summary}
-            </p>
+          {(location.address || location.phone || location.website) && (
+            <ContactInfo
+              address={location.address}
+              phone={location.phone}
+              website={location.website}
+              email={location.email}
+              city={location.city}
+              variant="grid"
+            />
           )}
 
-        </header>
-
-        
-
-        {/* Operating Hours & More Details - Two Column Layout */}
-        {location.operatingHours && (
-          <div style={styles.detailsGrid}>
-            {/* Operating Hours Section */}
-            <section style={styles.detailsSection}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <h2 style={{ ...styles.sectionTitle, margin: 0 }}>
-                  <Calendar size={20} />
-                  Operating Hours
-                </h2>
-                {(() => {
-                  const open = isLocationOpen(location.operatingHours as Record<string, string>);
-                  return (
-                    <span
-                      style={{
-                        padding: 'var(--space-1) var(--space-3)',
-                        borderRadius: 'var(--radius-full)',
-                        fontSize: 'var(--font-size-sm)',
-                        fontWeight: 'var(--font-weight-semibold)',
-                        backgroundColor: open ? 'var(--color-success-100)' : 'var(--color-error-100)',
-                        color: open ? 'var(--color-success-700)' : 'var(--color-error-700)',
-                      }}
-                    >
-                      {open ? 'Open Now' : 'Closed'}
-                    </span>
-                  );
-                })()}
-              </div>
-              <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-neutral-700)', marginTop: 'var(--space-4)' }}>
-                {DAYS_ORDER
-                  .filter(day => (location.operatingHours as Record<string, string>)[day])
-                  .map((day) => {
-                    const hours = (location.operatingHours as Record<string, string>)[day];
+          {/* Operating Hours & More Details - Two Column Layout */}
+          {location.operatingHours && (
+            <div style={{ ...styles.detailsGrid, marginTop: 'var(--space-8)' }}>
+              {/* Operating Hours Column */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4)' }}>
+                  <h2 style={{ ...styles.sectionTitle, margin: 0 }}>
+                    <Calendar size={20} />
+                    Operating Hours
+                  </h2>
+                  {(() => {
+                    const open = isLocationOpen(location.operatingHours as Record<string, string>);
                     return (
-                      <div key={day} style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        padding: 'var(--space-2) 0',
-                        borderBottom: '1px solid var(--color-neutral-200)'
-                      }}>
-                        <span style={{ fontWeight: 'var(--font-weight-medium)', textTransform: 'capitalize' }}>{day}</span>
-                        <span>{typeof hours === 'string' ? formatOperatingHours(hours) : 'Closed'}</span>
-                      </div>
-                    );
-                  })}
-              </div>
-            </section>
-
-            {/* More Details Section */}
-            <section style={styles.detailsSection}>
-            
-              
-              <div style={styles.contactInfo}>
-                {location.email && (
-                  <a 
-                    href={`mailto:${location.email}`} 
-                    style={{ ...styles.contactItem, textDecoration: 'none' }}
-                  >
-                    <Mail size={16} />
-                    <span style={styles.contactText}>{location.email}</span>
-                  </a>
-                )}
-
-              
-                
-
-               
-              </div>
-
-              {location.ageGroups && location.ageGroups.length > 0 && (
-                <>
-                  
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
-                    {location.ageGroups.map((ageGroup: any) => (
                       <span
-                        key={ageGroup.id}
                         style={{
-                          display: 'inline-block',
                           padding: 'var(--space-1) var(--space-3)',
-                          backgroundColor: 'var(--color-primary-100)',
-                          color: 'var(--color-primary-700)',
                           borderRadius: 'var(--radius-full)',
                           fontSize: 'var(--font-size-sm)',
-                          fontWeight: 'var(--font-weight-medium)',
+                          fontWeight: 'var(--font-weight-semibold)',
+                          backgroundColor: open ? 'var(--color-success-100)' : 'var(--color-error-100)',
+                          color: open ? 'var(--color-success-700)' : 'var(--color-error-700)',
                         }}
                       >
-                        {ageGroup.name}
+                        {open ? 'Open Now' : 'Closed'}
                       </span>
-                    ))}
+                    );
+                  })()}
+                </div>
+                <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-neutral-700)' }}>
+                  {DAYS_ORDER
+                    .filter(day => (location.operatingHours as Record<string, string>)[day])
+                    .map((day) => {
+                      const hours = (location.operatingHours as Record<string, string>)[day];
+                      return (
+                        <div key={day} style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          padding: 'var(--space-2) 0',
+                          borderBottom: '1px solid var(--color-neutral-200)'
+                        }}>
+                          <span style={{ fontWeight: 'var(--font-weight-medium)', textTransform: 'capitalize' }}>{day}</span>
+                          <span>{typeof hours === 'string' ? formatOperatingHours(hours) : 'Closed'}</span>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+
+              {/* More Details Column */}
+              <div>
+                {location.email && (
+                  <div style={{ marginBottom: 'var(--space-4)' }}>
+                    <a 
+                      href={`mailto:${location.email}`} 
+                      style={{ ...styles.contactItem, textDecoration: 'none' }}
+                    >
+                      <Mail size={16} />
+                      <span style={styles.contactText}>{location.email}</span>
+                    </a>
                   </div>
-                </>
-              )}
+                )}
 
-              {location.amenities.length > 0 && (
-                <>
-                 
-                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                    {location.amenities.map((amenity, index) => (
-                      <li key={index} style={styles.contactItem}>
-                        • {amenity}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </section>
-          </div>
-        )}
+                {location.ageGroups && location.ageGroups.length > 0 && (
+                  <div style={{ marginBottom: 'var(--space-4)' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                      {location.ageGroups.map((ageGroup: any) => (
+                        <span
+                          key={ageGroup.id}
+                          style={{
+                            display: 'inline-block',
+                            padding: 'var(--space-1) var(--space-3)',
+                            backgroundColor: 'var(--color-primary-100)',
+                            color: 'var(--color-primary-700)',
+                            borderRadius: 'var(--radius-full)',
+                            fontSize: 'var(--font-size-sm)',
+                            fontWeight: 'var(--font-weight-medium)',
+                          }}
+                        >
+                          {ageGroup.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-        {/* Additional Info Section */}
-        <section style={styles.detailsSection}>
-     
-          {location.description && (
-            <div>
-              <p style={styles.locationDescription}>{location.description}</p>
-              <div style={{
+                {location.amenities.length > 0 && (
+                  <div>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {location.amenities.map((amenity, index) => (
+                        <li key={index} style={styles.contactItem}>
+                          • {amenity}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+        <div style={{
                 backgroundColor: 'var(--color-info-50)',
                 border: '1px solid var(--color-info-200)',
                 borderRadius: 'var(--radius-md)',
@@ -464,6 +505,20 @@ console.log('Fetched location:', location);
                   Please check with the location to confirm details and hours before visiting.
                 </p>
               </div>
+
+        </header>
+
+        
+
+     
+
+        {/* Additional Info Section */}
+        <section style={styles.detailsSection}>
+     
+          {location.description && (
+            <div>
+              <p style={styles.locationDescription}>{location.description}</p>
+            
             </div>
           )}
         </section>
@@ -490,7 +545,7 @@ console.log('Fetched location:', location);
                   costDisplay={activity.costDisplay}
                   isFree={activity.isFree}
                   imageUrl={activity.imageUrl}
-                  ageGroup={activity.ageGroup}
+                  ageGroups={activity.ageGroups}
                   categories={activity.categories}
                   _count={activity._count}
                   showLocation={false}

@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
                 organization: true
               }
             },
-            ageGroup: true,
+            ageGroups: true,
             _count: {
               select: {
                 favorites: true,

@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
               },
             },
             categories: true,
-            ageGroup: true,
+            ageGroups: true,
           },
         },
       },

@@ -13,6 +13,114 @@ export const pageContainer: CSSProperties = {
   gap: 'var(--space-8)',
 };
 
+export const heroSection: CSSProperties = {
+  position: 'relative',
+  width: '100%',
+  height: '400px',
+  borderRadius: 'var(--radius-2xl)',
+  overflow: 'hidden',
+  boxShadow: 'var(--shadow-xl)',
+};
+
+export const heroSectionAuto: CSSProperties = {
+  height: 'auto',
+  minHeight: '220px',
+};
+
+export const heroImageContainer: CSSProperties = {
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+};
+
+export const heroImage: CSSProperties = {
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+};
+
+export const heroOverlay: CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%)',
+};
+
+export const heroContent: CSSProperties = {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  padding: 'var(--space-8)',
+  color: 'white',
+  zIndex: 1,
+};
+
+export const heroContentRelative: CSSProperties = {
+  position: 'relative',
+  padding: 'var(--space-8)',
+  color: 'white',
+  zIndex: 1,
+};
+
+export const heroTitle: CSSProperties = {
+  fontSize: 'var(--font-size-5xl)',
+  fontWeight: 'var(--font-weight-bold)',
+  marginBottom: 'var(--space-3)',
+  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+};
+
+export const heroAddress: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 'var(--space-2)',
+  color: 'white',
+  textDecoration: 'none',
+  fontSize: 'var(--font-size-lg)',
+  marginBottom: 'var(--space-3)',
+  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+  transition: 'opacity 0.2s',
+};
+
+export const heroTags: CSSProperties = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 'var(--space-2)',
+  marginTop: 'var(--space-4)',
+};
+
+export const heroTag: CSSProperties = {
+  padding: 'var(--space-2) var(--space-4)',
+  borderRadius: 'var(--radius-full)',
+  fontSize: 'var(--font-size-sm)',
+  fontWeight: 'var(--font-weight-semibold)',
+  color: 'white',
+  backdropFilter: 'blur(8px)',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+};
+
+export const heroSummary: CSSProperties = {
+  fontSize: 'var(--font-size-lg)',
+  lineHeight: 'var(--line-height-relaxed)',
+  color: 'white',
+  marginTop: 'var(--space-3)',
+  marginBottom: 0,
+  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+  maxWidth: '800px',
+};
+
+export const heroGradientContainer: CSSProperties = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: '100%',
+  minHeight: '100%',
+};
+
 export const breadcrumb: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
@@ -52,6 +160,75 @@ export const locationMeta: CSSProperties = {
   gap: 'var(--space-4)',
   marginBottom: 'var(--space-6)',
   alignItems: 'center',
+};
+
+export const quickInfoSection: CSSProperties = {
+  marginTop: 'var(--space-6)',
+  padding: 'var(--space-4)',
+  backgroundColor: 'var(--color-neutral-50)',
+  borderRadius: 'var(--radius-lg)',
+  border: '1px solid var(--color-neutral-200)',
+};
+
+export const quickInfoHeader: CSSProperties = {
+  display: 'flex',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+  gap: 'var(--space-3)',
+  marginBottom: 'var(--space-3)',
+};
+
+export const quickInfoTitle: CSSProperties = {
+  fontSize: 'var(--font-size-base)',
+  fontWeight: 'var(--font-weight-semibold)',
+  color: 'var(--color-neutral-900)',
+};
+
+export const quickInfoSubtitle: CSSProperties = {
+  fontSize: 'var(--font-size-sm)',
+  color: 'var(--color-neutral-600)',
+};
+
+export const quickInfoGrid: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+  gap: 'var(--space-3)',
+  marginTop: 'var(--space-3)',
+};
+
+export const quickInfoItem: CSSProperties = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: 'var(--space-3)',
+  padding: 'var(--space-3)',
+  borderRadius: 'var(--radius-md)',
+  backgroundColor: 'var(--color-surface)',
+  border: '1px solid var(--color-neutral-200)',
+  color: 'var(--color-neutral-800)',
+  textDecoration: 'none',
+  transition: 'background-color 0.2s ease, border-color 0.2s ease',
+};
+
+export const quickInfoText: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 'var(--space-1)',
+  minWidth: 0,
+};
+
+export const quickInfoLabel: CSSProperties = {
+  fontSize: 'var(--font-size-xs)',
+  textTransform: 'uppercase',
+  letterSpacing: 'var(--letter-spacing-wide)',
+  color: 'var(--color-neutral-500)',
+};
+
+export const quickInfoValue: CSSProperties = {
+  fontSize: 'var(--font-size-sm)',
+  fontWeight: 'var(--font-weight-medium)',
+  color: 'var(--color-neutral-900)',
+  lineHeight: 'var(--line-height-snug)',
+  wordBreak: 'break-word',
 };
 
 export const typeTag: CSSProperties = {
