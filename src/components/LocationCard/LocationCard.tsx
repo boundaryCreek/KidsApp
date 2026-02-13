@@ -2,10 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, Users, Star, Activity, Building2, Trees, Warehouse, Globe } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import * as styles from './LocationCard.styles';
-
-type LocationType = 'VENUE' | 'ORGANIZATION' | 'FACILITY' | 'OUTDOOR' | 'ONLINE';
 
 interface Category {
   id: string;
@@ -31,7 +29,6 @@ interface LocationCardProps {
   id: string;
   name: string;
   slug: string;
-  type?: LocationType;
   description: string;
   address?: string | null;
   city?: City | null;
@@ -45,36 +42,13 @@ interface LocationCardProps {
   };
   showCategories?: boolean;
   showStats?: boolean;
-  showTypeTag?: boolean;
   className?: string;
 }
-
-const getLocationTypeIcon = (type: LocationType) => {
-  switch (type) {
-    case 'VENUE':
-      return Building2;
-    case 'ORGANIZATION':
-      return Users;
-    case 'FACILITY':
-      return Warehouse;
-    case 'OUTDOOR':
-      return Trees;
-    case 'ONLINE':
-      return Globe;
-    default:
-      return Building2;
-  }
-};
-
-const formatLocationType = (type: LocationType) => {
-  return type.toLowerCase().replace('_', ' ');
-};
 
 export default function LocationCard({
   id,
   name,
   slug,
-  type,
   description,
   address,
   city,
@@ -85,12 +59,9 @@ export default function LocationCard({
   _count,
   showCategories = true,
   showStats = true,
-  showTypeTag = true,
   className,
 }: LocationCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-
-  const LocationIcon = type ? getLocationTypeIcon(type) : Building2;
 
   return (
     <Link href={`/locations/${slug}`} style={{ textDecoration: 'none' }}>
@@ -104,12 +75,6 @@ export default function LocationCard({
           <div style={styles.locationInfo}>
             <h3 style={styles.locationName}>{name}</h3>
             <div style={styles.locationMeta}>
-              {type && showTypeTag && (
-                <div style={styles.locationTypeTag}>
-                  <LocationIcon size={12} />
-                  {formatLocationType(type)}
-                </div>
-              )}
               {organization && <span>{organization.name}</span>}
               {city && <span>• {city.name}</span>}
             </div>

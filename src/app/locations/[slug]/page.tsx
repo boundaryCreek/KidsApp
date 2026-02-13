@@ -264,78 +264,44 @@ console.log('Fetched location:', location);
           currentPage={location.name}
         />
         
-        {/* Hero Section - Always show */}
+        {/* Hero Section */}
         <div
           style={{
             ...styles.heroSection,
-            ...(location.imageUrl ? {} : styles.heroSectionAuto),
+            ...(location.imageUrl ? {} : styles.heroSectionNoImage),
           }}
         >
-          {location.imageUrl ? (
-            // Image Hero
-            <>
-              <div style={styles.heroImageContainer}>
-                <img 
-                  src={location.imageUrl} 
-                  alt={location.name}
-                  style={styles.heroImage}
-                />
-                <div style={styles.heroOverlay} />
-              </div>
-              <div style={styles.heroContent}>
-                <h1 style={styles.heroTitle}>{location.name}</h1>
-                {location.summary && (
-                  <p style={styles.heroSummary}>{location.summary}</p>
-                )}
-                {location.tags && location.tags.length > 0 && (
-                  <div style={styles.heroTags}>
-                    {location.tags.map((tag) => (
-                      <span
-                        key={tag.id}
-                        style={{
-                          ...styles.heroTag,
-                          backgroundColor: tag.color || 'var(--color-primary-600)',
-                        }}
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            // Gradient Hero Fallback
-            <>
-              <div 
-                style={{
-                  ...styles.heroGradientContainer,
-                  background: `linear-gradient(135deg, ${primaryColor} 0%, color-mix(in srgb, ${primaryColor} 85%, transparent) 50%, color-mix(in srgb, ${primaryColor} 70%, transparent) 100%)`,
-                }}
+          {location.imageUrl && (
+            <div style={styles.heroImageContainer}>
+              <img 
+                src={location.imageUrl} 
+                alt={location.name}
+                style={styles.heroImage}
               />
-              <div style={styles.heroContentRelative}>
-                <h1 style={styles.heroTitle}>{location.name}</h1>
-                {location.summary && (
-                  <p style={styles.heroSummary}>{location.summary}</p>
-                )}
-                {location.tags && location.tags.length > 0 && (
-                  <div style={styles.heroTags}>
-                    {location.tags.map((tag) => (
-                      <span
-                        key={tag.id}
-                        style={{
-                          ...styles.heroTag,
-                          backgroundColor: tag.color || 'var(--color-primary-600)',
-                        }}
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
+              <div style={styles.heroOverlay} />
+            </div>
           )}
+          <div style={styles.heroContent}>
+            <h1 style={styles.heroTitle}>{location.name}</h1>
+            {location.summary && (
+              <p style={styles.heroSummary}>{location.summary}</p>
+            )}
+            {location.tags && location.tags.length > 0 && (
+              <div style={styles.heroTags}>
+                {location.tags.map((tag) => (
+                  <span
+                    key={tag.id}
+                    style={{
+                      ...styles.heroTag,
+                      backgroundColor: tag.color || 'var(--color-primary-600)',
+                    }}
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
       
@@ -353,7 +319,7 @@ console.log('Fetched location:', location);
             </div>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)', flexWrap: 'wrap', marginBottom: 'var(--space-4)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
               <CategoryList categories={location.categories} />
               {location.costRange && (
@@ -576,18 +542,16 @@ console.log('Fetched location:', location);
                   id={otherLocation.id}
                   name={otherLocation.name}
                   slug={otherLocation.slug}
-                  type={otherLocation.type as LocationType}
                   description={otherLocation.description}
                   address={otherLocation.address}
                   city={otherLocation.city}
                   organization={otherLocation.organization}
                   categories={otherLocation.categories}
                   rating={otherLocation.rating}
-                  reviewCount={otherLocation.reviewCount || 0}
+                  reviewCount={otherLocation.reviewCount ?? undefined}
                   _count={otherLocation._count}
                   showCategories={true}
                   showStats={true}
-                  showTypeTag={true}
                 />
               ))}
             </div>

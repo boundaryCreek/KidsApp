@@ -98,7 +98,6 @@ export default async function CategoryDetailsPage({ params }: { params: Promise<
                   id={location.id}
                   name={location.name}
                   slug={location.slug}
-                  type={location.type}
                   description={location.description}
                   address={location.address}
                   city={location.city}
@@ -106,7 +105,6 @@ export default async function CategoryDetailsPage({ params }: { params: Promise<
                   _count={location._count}
                   showCategories={false}
                   showStats={true}
-                  showTypeTag={false}
                 />
               ))}
             </div>

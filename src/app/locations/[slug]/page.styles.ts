@@ -14,23 +14,24 @@ export const pageContainer: CSSProperties = {
 };
 
 export const heroSection: CSSProperties = {
-  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
   width: '100%',
-  height: '400px',
   borderRadius: 'var(--radius-2xl)',
   overflow: 'hidden',
   boxShadow: 'var(--shadow-xl)',
+  border: '1px solid var(--color-neutral-200)',
 };
 
-export const heroSectionAuto: CSSProperties = {
-  height: 'auto',
-  minHeight: '220px',
+export const heroSectionNoImage: CSSProperties = {
+  boxShadow: 'var(--shadow-lg)',
 };
 
 export const heroImageContainer: CSSProperties = {
   position: 'relative',
   width: '100%',
-  height: '100%',
+  height: '300px',
+  flexShrink: 0,
 };
 
 export const heroImage: CSSProperties = {
@@ -45,23 +46,22 @@ export const heroOverlay: CSSProperties = {
   left: 0,
   right: 0,
   bottom: 0,
-  background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%)',
+  background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.3) 100%)',
 };
 
 export const heroContent: CSSProperties = {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0,
+  position: 'relative',
   padding: 'var(--space-8)',
-  color: 'white',
+  backgroundColor: 'var(--color-surface)',
+  color: 'var(--color-text)',
   zIndex: 1,
 };
 
 export const heroContentRelative: CSSProperties = {
   position: 'relative',
   padding: 'var(--space-8)',
-  color: 'white',
+  backgroundColor: 'var(--color-surface)',
+  color: 'var(--color-text)',
   zIndex: 1,
 };
 
@@ -69,18 +69,17 @@ export const heroTitle: CSSProperties = {
   fontSize: 'var(--font-size-5xl)',
   fontWeight: 'var(--font-weight-bold)',
   marginBottom: 'var(--space-3)',
-  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+  color: 'var(--color-text)',
 };
 
 export const heroAddress: CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 'var(--space-2)',
-  color: 'white',
+  color: 'var(--color-primary-600)',
   textDecoration: 'none',
   fontSize: 'var(--font-size-lg)',
   marginBottom: 'var(--space-3)',
-  textShadow: '0 1px 2px rgba(0,0,0,0.3)',
   transition: 'opacity 0.2s',
 };
 
@@ -97,28 +96,23 @@ export const heroTag: CSSProperties = {
   fontSize: 'var(--font-size-sm)',
   fontWeight: 'var(--font-weight-semibold)',
   color: 'white',
-  backdropFilter: 'blur(8px)',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+  boxShadow: 'var(--shadow-sm)',
 };
 
 export const heroSummary: CSSProperties = {
   fontSize: 'var(--font-size-lg)',
   lineHeight: 'var(--line-height-relaxed)',
-  color: 'white',
+  color: 'var(--color-text-secondary)',
   marginTop: 'var(--space-3)',
   marginBottom: 0,
-  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
   maxWidth: '800px',
 };
 
 export const heroGradientContainer: CSSProperties = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
+  position: 'relative',
   width: '100%',
-  minHeight: '100%',
+  height: '300px',
+  flexShrink: 0,
 };
 
 export const breadcrumb: CSSProperties = {

@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { TreePine, Calendar, Tag, MapPin } from 'lucide-react';
 import { useState } from 'react';
+import LocationSelector from '../LocationSelector/LocationSelector';
 import { 
   headerStyles, 
-  headerContainerStyles, 
+  headerContainerStyles,
+  headerCenterStyles,
   logoStyles,
   logoLinkStyles,
   headerTitleStyles,
@@ -34,6 +36,10 @@ export default function Header() {
             <p style={taglineStyles}>Big Fun, Up North.</p>
           </div>
         </Link>
+        
+        <div style={headerCenterStyles}>
+          <LocationSelector />
+        </div>
         
         <input 
           type="checkbox" 

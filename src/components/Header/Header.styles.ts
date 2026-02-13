@@ -15,7 +15,16 @@ export const headerContainerStyles: CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  gap: 'var(--space-4)',
   position: 'relative'
+};
+
+export const headerCenterStyles: CSSProperties = {
+  flex: 1,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minWidth: 0
 };
 
 export const logoLinkStyles: CSSProperties = {
