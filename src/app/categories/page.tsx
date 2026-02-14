@@ -130,9 +130,22 @@ export default function CategoriesPage() {
                 onMouseLeave={() => setHoveredCard(null)}
               >
               <div style={categoryIconStyles}>
-                <span style={{ fontSize: 'var(--font-size-5xl)', color: category.color }}>
-                  {category.icon}
-                </span>
+                {category.icon.startsWith('/') ? (
+                  <img
+                    src={category.icon}
+                    alt={category.name}
+                    style={{
+                      width: '64px',
+                      height: '64px',
+                      objectFit: 'contain',
+                      filter: 'brightness(0)',
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: 'var(--font-size-5xl)', color: category.color }}>
+                    {category.icon}
+                  </span>
+                )}
               </div>
               <h3 style={{
                 ...categoryNameStyles,
