@@ -1,4 +1,5 @@
 import { MapPin, Activity } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { CategoryDetails } from '../../types';
 import {
   categoryHeaderStyles,
@@ -18,7 +19,30 @@ export default function CategoryHeader({ category }: CategoryHeaderProps) {
     <div style={categoryHeaderStyles}>
       <div style={categoryIconStyles}>
         <span style={{ fontSize: 'var(--font-size-6xl)', color: category.color }}>
-          {category.icon}
+          {(() => {
+            // Check if it's a custom icon path
+            if (category.icon.startsWith('/')) {
+              return (
+                <img
+                  src={category.icon}
+                  alt={category.name}
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    objectFit: 'contain',
+                    filter: `drop-shadow(0 0 8px ${category.color}40)`,
+                  }}
+                />
+              );
+            }
+            // Otherwise, try to render as Lucide icon
+            const IconComponent = (LucideIcons as any)[category.icon];
+            return IconComponent ? (
+              <IconComponent size={64} strokeWidth={2} />
+            ) : (
+              <span>{category.icon}</span>
+            );
+          })()}
         </span>
       </div>
       <h1 style={{

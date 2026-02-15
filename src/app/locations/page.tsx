@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
 import BaseLayout from '../../components/BaseLayout/BaseLayout';
-import LocationCard from '../../components/LocationCard/LocationCard';
+import SimpleLocationsList from '../../components/SimpleLocationsList/SimpleLocationsList';
 import { prisma } from '../../lib/prisma';
 import * as styles from './page.styles';
 
@@ -52,15 +52,6 @@ interface Location {
   };
 }
 
-// Hook to handle responsive grid
-const useResponsiveGrid = () => {
-  const getGridStyle = () => {
-    return styles.locationsGridResponsive.md;
-  };
-
-  return getGridStyle();
-};
-
 export const metadata: Metadata = {
   title: 'Locations | Kids App',
   description: 'Discover Minnesota\'s amazing locations where kids can learn, play, and grow.',
@@ -107,8 +98,6 @@ export default async function LocationsPage() {
     },
   });
 
-  const gridStyle = useResponsiveGrid();
-
   return (
     <BaseLayout>
       <div style={styles.pageContainer}>
@@ -121,26 +110,10 @@ export default async function LocationsPage() {
             </p>
           </header>
 
-          <div style={gridStyle}>
-            {locations.map((location) => (
-              <LocationCard
-                key={location.id}
-                id={location.id}
-                name={location.name}
-                slug={location.slug}
-                description={location.description}
-                address={location.address}
-                city={location.city}
-                organization={location.organization}
-                categories={location.categories}
-                rating={location.rating}
-                reviewCount={location.reviewCount ?? undefined}
-                _count={location._count}
-                showCategories={true}
-                showStats={true}
-              />
-            ))}
-          </div>
+          <SimpleLocationsList
+            locations={locations}
+            cityName="Minnesota"
+          />
         </div>
       </div>
     </BaseLayout>
