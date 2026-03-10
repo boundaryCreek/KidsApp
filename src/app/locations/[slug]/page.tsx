@@ -273,12 +273,26 @@ console.log('Fetched location:', location);
         >
           {location.imageUrl && (
             <div style={styles.heroImageContainer}>
-              <img 
-                src={location.imageUrl} 
+              <img
+                src={location.imageUrl}
                 alt={location.name}
                 style={styles.heroImage}
               />
               <div style={styles.heroOverlay} />
+              {location.imageCredit && (
+                location.imageCreditUrl ? (
+                  <a
+                    href={location.imageCreditUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={styles.photoCreditBadge}
+                  >
+                    {location.imageCredit}
+                  </a>
+                ) : (
+                  <span style={styles.photoCreditBadge}>{location.imageCredit}</span>
+                )
+              )}
             </div>
           )}
           <div style={styles.heroContent}>

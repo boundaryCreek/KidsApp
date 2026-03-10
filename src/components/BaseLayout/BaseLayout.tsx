@@ -1,12 +1,15 @@
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { 
-  baseLayoutStyles, 
-  mainStyles, 
+import AdPlaceholder from '../AdPlaceholder/AdPlaceholder';
+import {
+  baseLayoutStyles,
+  mainStyles,
   contentWrapperWithRailStyles,
   contentWrapperSingleColumnStyles,
-  mainContentStyles, 
-  rightRailStyles 
+  mainContentStyles,
+  rightRailStyles,
+  topAdSlotStyles,
+  topAdSlotInnerStyles,
 } from './BaseLayout.styles';
 
 interface BaseLayoutProps {
@@ -31,6 +34,11 @@ export default function BaseLayout({ children, rightRail }: BaseLayoutProps) {
     <div style={baseLayoutStyles}>
       <style>{responsiveStyles}</style>
       <Header />
+      <div style={topAdSlotStyles}>
+        <div style={topAdSlotInnerStyles}>
+          <AdPlaceholder size="banner" label="Advertisement" />
+        </div>
+      </div>
       <main style={mainStyles}>
         <div
           className="base-layout__content"

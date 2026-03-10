@@ -11,7 +11,7 @@ const sectionHeaderStyles = {
     display: 'flex',
     alignItems: 'center',
     gap: 'var(--space-2)',
-    fontSize: 'var(--font-size-xl)',
+    fontSize: 'var(--font-size-base)',
     fontWeight: 'var(--font-weight-bold)',
     color: 'var(--color-neutral-900)',
     marginBottom: 'var(--space-4)',

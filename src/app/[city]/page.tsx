@@ -2,74 +2,23 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import BaseLayout from '../../components/BaseLayout/BaseLayout';
-import SimpleLocationsList from '../../components/SimpleLocationsList/SimpleLocationsList';
+import CityLocationsFilter from '../../components/CityLocationsFilter/CityLocationsFilter';
+import AdPlaceholder from '../../components/AdPlaceholder/AdPlaceholder';
 import { prisma } from '../../lib/prisma';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  icon: string;
-  color: string;
-}
-
-interface City {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-interface Organization {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-interface Location {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  imageUrl?: string;
-  amenities: string[];
-  capacity?: number;
-  accessibility: string[];
-  parking?: string;
-  publicTransport?: string;
-  operatingHours?: Record<string, string>;
-  rating?: number;
-  reviewCount?: number;
-  city?: City;
-  organization?: Organization;
-  categories: Category[];
-  _count: {
-    activities: number;
-    reviews: number;
-  };
-}
 
 interface PageProps {
   params: Promise<{ city: string }>;
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { city: citySlug } = await params;
-  
+
   const city = await prisma.city.findUnique({
     where: { slug: citySlug },
     select: {
       name: true,
       description: true,
-      _count: {
-        select: {
-          locations: true,
-        },
-      },
+      _count: { select: { locations: true } },
     },
   });
 
@@ -81,107 +30,86 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${city.name} Locations | Kids App`,
-    description: city.description || 
-      `Discover ${city._count.locations} amazing locations in ${city.name} where kids can learn, play, and grow. Find venues, museums, parks, and more.`,
+    title: `${city.name} | Kids App`,
+    description:
+      city.description ||
+      `Discover ${city._count.locations} amazing locations in ${city.name} where kids can learn, play, and grow.`,
   };
 }
 
-// Generate static params for common cities (optional optimization)
 export async function generateStaticParams() {
   const cities = await prisma.city.findMany({
     where: { isActive: true },
     select: { slug: true },
-    take: 20, // Limit to most common cities for build time
+    take: 20,
   });
-
-  return cities.map((city) => ({
-    city: city.slug,
-  }));
+  return cities.map((city) => ({ city: city.slug }));
 }
 
 export default async function CityLocationsPage({ params }: PageProps) {
   const { city: citySlug } = await params;
 
-  // Fetch the city data
   const city = await prisma.city.findUnique({
-    where: { 
-      slug: citySlug,
-      isActive: true,
-    },
+    where: { slug: citySlug, isActive: true },
     select: {
       id: true,
       name: true,
       slug: true,
       description: true,
+      imageUrl: true,
+      imageCredit: true,
+      imageCreditUrl: true,
       latitude: true,
       longitude: true,
     },
   });
 
-  // Return 404 if city doesn't exist
-  if (!city) {
-    notFound();
-  }
+  if (!city) notFound();
 
-  // Fetch all active locations in this city
+  // Always include the city's own locations (even if they lack coordinates), plus any nearby
+  // locations within a 50-mile bounding box so the client radius filter has full data.
+  const MAX_MILES = 50;
+  const bboxCondition =
+    city.latitude != null && city.longitude != null
+      ? {
+          latitude: {
+            gte: city.latitude - MAX_MILES / 69.0,
+            lte: city.latitude + MAX_MILES / 69.0,
+          },
+          longitude: {
+            gte: city.longitude - MAX_MILES / (69.0 * Math.cos((city.latitude * Math.PI) / 180)),
+            lte: city.longitude + MAX_MILES / (69.0 * Math.cos((city.latitude * Math.PI) / 180)),
+          },
+        }
+      : null;
+
   const locations = await prisma.location.findMany({
     where: {
       isActive: true,
-      cityId: city.id,
+      OR: [
+        { cityId: city.id },
+        ...(bboxCondition ? [bboxCondition] : []),
+      ],
     },
     include: {
-      city: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      organization: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      categories: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          icon: true,
-          color: true,
-        },
-      },
-      _count: {
-        select: {
-          activities: true,
-          reviews: true,
-        },
-      },
+      city: { select: { id: true, name: true, slug: true } },
+      organization: { select: { id: true, name: true, slug: true } },
+      categories: { select: { id: true, name: true, slug: true, icon: true, color: true } },
+      _count: { select: { activities: true, reviews: true } },
     },
-    orderBy: {
-      name: 'asc',
-    },
+    orderBy: { name: 'asc' },
   });
 
   const styles = {
     pageContainer: {
-      minHeight: '100vh',
-      padding: 'var(--space-8) var(--space-4)',
-      background: 'linear-gradient(to bottom, var(--color-neutral-50), var(--color-surface))',
-    },
-    container: {
-      maxWidth: 'var(--container-7xl)',
-      margin: '0 auto',
-      padding: '0 var(--space-4)',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      gap: 'var(--space-8)',
     },
     breadcrumb: {
       display: 'flex',
       alignItems: 'center',
       gap: 'var(--space-2)',
-      marginBottom: 'var(--space-6)',
       fontSize: 'var(--font-size-sm)',
       color: 'var(--color-neutral-600)',
     },
@@ -192,58 +120,67 @@ export default async function CityLocationsPage({ params }: PageProps) {
     },
     breadcrumbSeparator: {
       color: 'var(--color-neutral-400)',
-      fontWeight: 'var(--font-weight-normal)',
     },
     breadcrumbCurrent: {
-      color: 'var(--color-primary-600)',
+      color: 'var(--color-neutral-700)',
       fontWeight: 'var(--font-weight-medium)',
     },
-    headerSection: {
-      textAlign: 'center' as const,
-      marginBottom: 'var(--space-12)',
-      padding: 'var(--space-8) 0',
-    },
-    title: {
-      fontSize: 'var(--font-size-4xl)',
-      fontWeight: 'var(--font-weight-black)',
-      color: 'var(--color-neutral-900)',
-      margin: '0 0 var(--space-4) 0',
-      lineHeight: 'var(--line-height-tight)',
-    },
-    subtitle: {
-      fontSize: 'var(--font-size-xl)',
-      color: 'var(--color-neutral-600)',
-      margin: '0 0 var(--space-6) 0',
-      lineHeight: 'var(--line-height-relaxed)',
-    },
-    statsBar: {
-      display: 'flex',
-      justifyContent: 'center',
-      gap: 'var(--space-8)',
-      marginTop: 'var(--space-6)',
-    },
-    statItem: {
+    heroSection: {
       display: 'flex',
       flexDirection: 'column' as const,
-      alignItems: 'center',
-      padding: 'var(--space-4)',
-      backgroundColor: 'var(--color-primary-50)',
-      borderRadius: 'var(--radius-lg)',
-      border: '1px solid var(--color-primary-200)',
-      minWidth: '120px',
+      width: '100%',
+      borderRadius: 'var(--radius-2xl)',
+      overflow: 'hidden',
+      boxShadow: 'var(--shadow-xl)',
+      border: '1px solid var(--color-neutral-200)',
     },
-    statValue: {
-      fontSize: 'var(--font-size-2xl)',
+    heroImageContainer: {
+      position: 'relative' as const,
+      width: '100%',
+      height: '280px',
+      flexShrink: 0,
+    },
+    heroImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover' as const,
+    },
+    heroOverlay: {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.3) 100%)',
+    },
+    photoCreditBadge: {
+      position: 'absolute' as const,
+      bottom: 'var(--space-2)',
+      right: 'var(--space-3)',
+      fontSize: 'var(--font-size-xs)',
+      color: 'rgba(255,255,255,0.85)',
+      textDecoration: 'none',
+      background: 'rgba(0,0,0,0.45)',
+      padding: '2px var(--space-2)',
+      borderRadius: 'var(--radius-sm)',
+      backdropFilter: 'blur(4px)',
+    },
+    heroContent: {
+      padding: 'var(--space-8)',
+      backgroundColor: 'var(--color-surface)',
+    },
+    heroTitle: {
+      fontSize: 'var(--font-size-4xl)',
       fontWeight: 'var(--font-weight-bold)',
-      color: 'var(--color-primary-700)',
-      marginBottom: 'var(--space-1)',
+      color: 'var(--color-neutral-900)',
+      margin: '0 0 var(--space-3) 0',
+      lineHeight: 'var(--line-height-tight)',
     },
-    statLabel: {
-      fontSize: 'var(--font-size-sm)',
-      color: 'var(--color-primary-600)',
-      textTransform: 'uppercase' as const,
-      letterSpacing: '0.05em',
-      fontWeight: 'var(--font-weight-medium)',
+    heroDescription: {
+      fontSize: 'var(--font-size-lg)',
+      color: 'var(--color-neutral-600)',
+      margin: 0,
+      lineHeight: 'var(--line-height-relaxed)',
     },
     emptyState: {
       display: 'flex',
@@ -270,69 +207,75 @@ export default async function CityLocationsPage({ params }: PageProps) {
       backgroundColor: 'var(--color-primary-100)',
       borderRadius: 'var(--radius-lg)',
       border: '1px solid var(--color-primary-300)',
-      transition: 'var(--transition-colors)',
-    }
+    },
   };
 
   return (
-    <BaseLayout>
+    <BaseLayout
+      rightRail={(
+        <>
+          <AdPlaceholder size="medium" label="Advertisement" />
+          <AdPlaceholder size="medium" label="Advertisement" />
+        </>
+      )}
+    >
       <div style={styles.pageContainer}>
-        <div style={styles.container}>
-          {/* Breadcrumb */}
-          <nav style={styles.breadcrumb}>
-            <Link href="/" style={styles.breadcrumbLink}>
-              Home
-            </Link>
-            <span style={styles.breadcrumbSeparator}>/</span>
-            <Link href="/locations" style={styles.breadcrumbLink}>
-              Locations
-            </Link>
-            <span style={styles.breadcrumbSeparator}>/</span>
-            <span style={styles.breadcrumbCurrent}>{city.name}</span>
-          </nav>
+        {/* Breadcrumb */}
+        <nav style={styles.breadcrumb}>
+          <Link href="/" style={styles.breadcrumbLink}>Home</Link>
+          <span style={styles.breadcrumbSeparator}>/</span>
+          <Link href="/locations" style={styles.breadcrumbLink}>Locations</Link>
+          <span style={styles.breadcrumbSeparator}>/</span>
+          <span style={styles.breadcrumbCurrent}>{city.name}</span>
+        </nav>
 
-          {/* Header */}
-          <header style={styles.headerSection}>
-            <h1 style={styles.title}>Locations in {city.name}</h1>
-            {city.description && (
-              <p style={styles.subtitle}>{city.description}</p>
-            )}
-            {!city.description && (
-              <p style={styles.subtitle}>
-                Discover {locations.length} amazing location{locations.length !== 1 ? 's' : ''} in {city.name} where kids can learn, play, and grow.
-              </p>
-            )}
-            <div style={styles.statsBar}>
-              <div style={styles.statItem}>
-                <span style={styles.statValue}>{locations.length}</span>
-                <span style={styles.statLabel}>Location{locations.length !== 1 ? 's' : ''}</span>
-              </div>
-              <div style={styles.statItem}>
-                <span style={styles.statValue}>
-                  {locations.reduce((sum, loc) => sum + loc._count.activities, 0)}
-                </span>
-                <span style={styles.statLabel}>Activities</span>
-              </div>
-            </div>
-          </header>
-
-          {/* Locations List */}
-          {locations.length > 0 ? (
-            <SimpleLocationsList
-              locations={locations}
-              cityName={city.name}
-            />
-          ) : (
-            <div style={styles.emptyState}>
-              <p style={styles.emptyStateText}>
-                No locations found in {city.name} yet.
-              </p>
-              <Link href="/locations" style={styles.emptyStateLink}>
-                Browse all locations
-              </Link>
+        {/* Hero */}
+        <div style={styles.heroSection}>
+          {city.imageUrl && (
+            <div style={styles.heroImageContainer}>
+              <img src={city.imageUrl} alt={city.name} style={styles.heroImage} />
+              <div style={styles.heroOverlay} />
+              {city.imageCredit && (
+                city.imageCreditUrl ? (
+                  <a
+                    href={city.imageCreditUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={styles.photoCreditBadge}
+                  >
+                    {city.imageCredit}
+                  </a>
+                ) : (
+                  <span style={styles.photoCreditBadge}>{city.imageCredit}</span>
+                )
+              )}
             </div>
           )}
+          <div style={styles.heroContent}>
+            <h1 style={styles.heroTitle}>{city.name}</h1>
+            {city.description && (
+              <p style={styles.heroDescription}>{city.description}</p>
+            )}
+          </div>
         </div>
+
+        {/* Locations */}
+        {locations.length > 0 ? (
+          <CityLocationsFilter
+            locations={locations}
+            cityName={city.name}
+            cityId={city.id}
+            cityLatitude={city.latitude}
+            cityLongitude={city.longitude}
+          />
+        ) : (
+          <div style={styles.emptyState}>
+            <p style={styles.emptyStateText}>No locations found in {city.name} yet.</p>
+            <Link href="/locations" style={styles.emptyStateLink}>
+              Browse all locations
+            </Link>
+          </div>
+        )}
       </div>
     </BaseLayout>
   );

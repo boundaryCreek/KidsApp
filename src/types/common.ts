@@ -11,6 +11,9 @@ export interface City {
   name: string;
   slug: string;
   description: string | null;
+  imageUrl: string | null;
+  imageCredit: string | null;
+  imageCreditUrl: string | null;
   latitude: number | null;
   longitude: number | null;
   isActive: boolean;

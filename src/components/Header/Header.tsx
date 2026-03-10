@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { TreePine, Calendar, Tag, MapPin } from 'lucide-react';
+import { TreePine, Calendar, Tag } from 'lucide-react';
 import { useState } from 'react';
 import LocationSelector from '../LocationSelector/LocationSelector';
+import CitiesNav from '../CitiesNav/CitiesNav';
 import { 
   headerStyles, 
   headerContainerStyles,
@@ -18,7 +19,6 @@ import {
   navMobileStyles,
   calendarLinkStyles,
   categoriesLinkStyles,
-  locationsLinkStyles
 } from './Header.styles';
 
 export default function Header() {
@@ -27,6 +27,7 @@ export default function Header() {
   return (
     <header style={headerStyles}>
       <div style={headerContainerStyles}>
+        <CitiesNav />
         <Link href="/" style={logoLinkStyles}>
           <div style={logoStyles}>
             <h1 style={headerTitleStyles}>
@@ -62,16 +63,6 @@ export default function Header() {
               >
                 <Tag size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
                 Categories
-              </Link>
-            </li>
-            <li>
-              <Link 
-                href="/locations" 
-                style={locationsLinkStyles}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <MapPin size={18} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 'var(--space-2)' }} />
-                Locations
               </Link>
             </li>
             <li>

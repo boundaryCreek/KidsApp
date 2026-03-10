@@ -31,6 +31,8 @@ export interface LocationFormData {
   email: string;
   website: string;
   imageUrl: string;
+  imageCredit: string;
+  imageCreditUrl: string;
   amenitiesInput: string;
   accessibility: AccessibilityFeature[];
   capacity: string;
@@ -62,6 +64,8 @@ export interface Location {
   email: string | null;
   website: string | null;
   imageUrl: string | null;
+  imageCredit: string | null;
+  imageCreditUrl: string | null;
   amenities: string[];
   accessibility: AccessibilityFeature[];
   capacity: number | null;

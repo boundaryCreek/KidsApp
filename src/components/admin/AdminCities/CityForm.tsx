@@ -46,6 +46,9 @@ export default function CityForm({ city, isEdit = false }: CityFormProps) {
   const [formData, setFormData] = useState<CityFormData>({
     name: city?.name || '',
     description: city?.description || '',
+    imageUrl: city?.imageUrl || '',
+    imageCredit: city?.imageCredit || '',
+    imageCreditUrl: city?.imageCreditUrl || '',
     latitude: city?.latitude !== null && city?.latitude !== undefined ? city.latitude.toString() : '',
     longitude: city?.longitude !== null && city?.longitude !== undefined ? city.longitude.toString() : '',
   });
@@ -72,6 +75,9 @@ export default function CityForm({ city, isEdit = false }: CityFormProps) {
     const payload = {
       name: formData.name,
       description: formData.description || null,
+      imageUrl: formData.imageUrl || null,
+      imageCredit: formData.imageCredit || null,
+      imageCreditUrl: formData.imageCreditUrl || null,
       latitude: formData.latitude ? parseFloat(formData.latitude) : null,
       longitude: formData.longitude ? parseFloat(formData.longitude) : null,
     };
@@ -119,6 +125,32 @@ export default function CityForm({ city, isEdit = false }: CityFormProps) {
             disabled={loading}
             rows={3}
           />
+        </FormSection>
+
+        <FormSection title="Photo">
+          <TextField
+            label="Image URL"
+            value={formData.imageUrl}
+            onChange={(value) => handleInputChange('imageUrl', value)}
+            placeholder="https://example.com/image.jpg"
+            disabled={loading}
+          />
+          <GridFields columns={2}>
+            <TextField
+              label="Photo Credit"
+              value={formData.imageCredit}
+              onChange={(value) => handleInputChange('imageCredit', value)}
+              placeholder="e.g., Photo by Jane Doe"
+              disabled={loading}
+            />
+            <TextField
+              label="Photo Credit URL"
+              value={formData.imageCreditUrl}
+              onChange={(value) => handleInputChange('imageCreditUrl', value)}
+              placeholder="https://example.com/photographer"
+              disabled={loading}
+            />
+          </GridFields>
         </FormSection>
 
         <FormSection title="Location">

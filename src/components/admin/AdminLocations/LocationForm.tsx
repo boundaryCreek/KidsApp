@@ -136,6 +136,8 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
     email: location?.email || '',
     website: location?.website || '',
     imageUrl: location?.imageUrl || '',
+    imageCredit: location?.imageCredit || '',
+    imageCreditUrl: location?.imageCreditUrl || '',
     amenitiesInput: location?.amenities?.join(', ') || '',
     accessibility: (location?.accessibility as AccessibilityFeature[]) || [],
     capacity: location?.capacity !== null && location?.capacity !== undefined ? location.capacity.toString() : '',
@@ -234,6 +236,8 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
       email: formData.email || null,
       website: formData.website || null,
       imageUrl: formData.imageUrl || null,
+      imageCredit: formData.imageCredit || null,
+      imageCreditUrl: formData.imageCreditUrl || null,
       amenities: normalizeAmenities(formData.amenitiesInput),
       capacity: formData.capacity ? parseInt(formData.capacity, 10) : null,
       accessibility: formData.accessibility,
@@ -463,6 +467,30 @@ export default function LocationForm({ location, isEdit = false }: LocationFormP
             placeholder="https://example.com/location.jpg"
             disabled={loading}
           />
+          <GridFields>
+            <TextField
+              label="Photo Credit"
+              value={formData.imageCredit}
+              onChange={(value) => handleInputChange('imageCredit', value)}
+              placeholder="e.g., Photo by Jane Doe / Unsplash"
+              disabled={loading}
+            />
+            <TextField
+              label="Photo Credit URL"
+              value={formData.imageCreditUrl}
+              onChange={(value) => handleInputChange('imageCreditUrl', value)}
+              type="url"
+              placeholder="https://unsplash.com/photos/..."
+              disabled={loading}
+            />
+          </GridFields>
+          <div style={{
+            fontSize: 'var(--font-size-xs)',
+            color: 'var(--color-neutral-500)',
+            marginTop: 'calc(var(--space-1) * -1)',
+          }}>
+            Required for Creative Commons and licensed images. Attribution will be displayed on the location page.
+          </div>
         </FormSection>
 
         <FormSection title="Classification">

@@ -73,6 +73,8 @@ export default async function CalendarServer() {
       email: loc.email,
       website: loc.website,
       imageUrl: loc.imageUrl,
+      imageCredit: loc.imageCredit ?? null,
+      imageCreditUrl: loc.imageCreditUrl ?? null,
       amenities: loc.amenities || [],
       accessibility: loc.accessibility || [],
       capacity: loc.capacity,

@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, description, latitude, longitude } = body;
+    const { name, description, imageUrl, imageCredit, imageCreditUrl, latitude, longitude } = body;
 
     // Validate required fields
     if (!name) {
@@ -85,6 +85,9 @@ export async function POST(request: NextRequest) {
         name,
         slug: name.toLowerCase().replace(/\s+/g, '-'),
         description,
+        imageUrl,
+        imageCredit,
+        imageCreditUrl,
         latitude,
         longitude,
       },

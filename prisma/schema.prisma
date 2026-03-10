@@ -71,15 +71,18 @@ model Tag {
 
 // City model (updated with relation to LocationList)
 model City {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  latitude    Float?
-  longitude   Float?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  description    String?
+  imageUrl       String?
+  imageCredit    String?
+  imageCreditUrl String?
+  latitude       Float?
+  longitude      Float?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   locations     Location[]
   activityLists ActivityList[] @relation("ActivityListCity")
@@ -233,6 +236,8 @@ model Location {
   email             String?
   website           String?
   imageUrl          String?
+  imageCredit       String?             // Photo attribution (e.g., "Photo by Jane Doe")
+  imageCreditUrl    String?             // Link to original photo or photographer profile
   amenities         String[]
   capacity          Int?
   accessibility     AccessibilityFeature[]

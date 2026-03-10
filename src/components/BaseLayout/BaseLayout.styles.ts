@@ -38,6 +38,18 @@ export const mainContentStyles: CSSProperties = {
   minWidth: 0 // Prevent grid blowout
 };
 
+export const topAdSlotStyles: CSSProperties = {
+  width: '100%',
+  borderBottom: '1px solid var(--color-neutral-200)',
+  backgroundColor: 'var(--color-neutral-50)',
+};
+
+export const topAdSlotInnerStyles: CSSProperties = {
+  maxWidth: 'var(--container-5xl)',
+  margin: '0 auto',
+  padding: 'var(--space-3) var(--space-6)',
+};
+
 export const rightRailStyles: CSSProperties = {
  // position: 'sticky',
   top: 'var(--space-6)',

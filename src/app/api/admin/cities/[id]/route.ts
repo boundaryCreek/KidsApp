@@ -48,7 +48,7 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const { name, description, latitude, longitude } = body;
+    const { name, description, imageUrl, imageCredit, imageCreditUrl, latitude, longitude } = body;
 
     // Validate required fields
     if (!name) {
@@ -80,6 +80,9 @@ export async function PUT(
       data: {
         name,
         description,
+        imageUrl,
+        imageCredit,
+        imageCreditUrl,
         latitude,
         longitude,
       },

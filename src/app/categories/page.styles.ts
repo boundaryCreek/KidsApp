@@ -20,7 +20,7 @@ export const categoriesIconStyles: CSSProperties = {
 }
 
 export const categoriesTitleStyles: CSSProperties = {
-  fontSize: 'var(--font-size-3xl)',
+  fontSize: 'var(--font-size-xl)',
   fontWeight: 'var(--font-weight-bold)',
   color: 'var(--color-primary-600)',
   marginBottom: 'var(--space-3)',
@@ -28,7 +28,7 @@ export const categoriesTitleStyles: CSSProperties = {
 }
 
 export const categoriesDescriptionStyles: CSSProperties = {
-  fontSize: 'var(--font-size-lg)',
+  fontSize: 'var(--font-size-sm)',
   color: 'var(--color-muted)',
   margin: 0,
   fontWeight: 'var(--font-weight-normal)',
@@ -47,7 +47,7 @@ export const categoryCardStyles: CSSProperties = {
   backgroundColor: 'var(--color-surface)',
   padding: 'var(--space-6)',
   borderRadius: 'var(--radius-xl)',
-  border: `var(--border-width-2) solid var(--color-border)`,
+  border: '1px solid var(--color-neutral-200)',
   boxShadow: 'var(--shadow-md)',
   textAlign: 'center',
   transition: 'var(--transition-all)',
@@ -70,7 +70,7 @@ export const categoryIconStyles: CSSProperties = {
 }
 
 export const categoryNameStyles: CSSProperties = {
-  fontSize: 'var(--font-size-xl)',
+  fontSize: 'var(--font-size-base)',
   fontWeight: 'var(--font-weight-semibold)',
   marginBottom: 'var(--space-3)',
   margin: '0 0 var(--space-3) 0'
@@ -102,29 +102,3 @@ export const categoryStatsItemStyles: CSSProperties = {
   fontWeight: 'var(--font-weight-medium)'
 }
 
-export const loadingContainerStyles: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '400px',
-  gap: 'var(--space-4)',
-  fontSize: 'var(--font-size-lg)',
-  color: 'var(--color-muted)'
-}
-
-export const errorContainerStyles: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '400px',
-  gap: 'var(--space-4)',
-  textAlign: 'center'
-}
-
-export const errorMessageStyles: CSSProperties = {
-  fontSize: 'var(--font-size-lg)',
-  color: 'var(--color-error-600)',
-  margin: 0
-}

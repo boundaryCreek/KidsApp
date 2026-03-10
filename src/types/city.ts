@@ -16,6 +16,9 @@ export interface CityListResponse {
 export interface CityFormData {
   name: string;
   description: string;
+  imageUrl: string;
+  imageCredit: string;
+  imageCreditUrl: string;
   latitude: string;
   longitude: string;
 }

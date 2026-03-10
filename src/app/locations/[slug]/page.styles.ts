@@ -49,6 +49,20 @@ export const heroOverlay: CSSProperties = {
   background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.3) 100%)',
 };
 
+export const photoCreditBadge: CSSProperties = {
+  position: 'absolute',
+  bottom: 'var(--space-2)',
+  right: 'var(--space-3)',
+  fontSize: 'var(--font-size-xs)',
+  color: 'rgba(255,255,255,0.85)',
+  textDecoration: 'none',
+  background: 'rgba(0,0,0,0.45)',
+  padding: '2px var(--space-2)',
+  borderRadius: 'var(--radius-sm)',
+  backdropFilter: 'blur(4px)',
+  lineHeight: 'var(--line-height-normal)',
+};
+
 export const heroContent: CSSProperties = {
   position: 'relative',
   padding: 'var(--space-8)',

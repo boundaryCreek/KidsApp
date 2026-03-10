@@ -8,12 +8,12 @@ export const backLinkStyles: CSSProperties = {
   textDecoration: 'none',
   fontSize: 'var(--font-size-sm)',
   fontWeight: 'var(--font-weight-medium)',
-  marginBottom: 'var(--space-8)',
+  marginBottom: 'var(--space-3)',
   transition: 'var(--transition-colors)',
 };
 
 export const sectionStyles: CSSProperties = {
-  marginBottom: 'var(--space-12)',
+  marginBottom: 'var(--space-6)',
 };
 
 export const gridStyles: CSSProperties = {
